@@ -2,6 +2,11 @@
 build.xml
 .idea
 
+#Eclipse - Android related files#
+.classpath
+.project
+.settings
+
 
 # built application files
 *.apk

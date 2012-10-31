@@ -7,6 +7,8 @@ build.xml
 .project
 .settings
 
+# VIM swap files
+*.swp
 
 # built application files
 *.apk

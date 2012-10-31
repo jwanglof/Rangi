@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import com.example.Rangi.R;
 
 public class SplashScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
@@ -18,7 +17,6 @@ public class SplashScreen extends Activity {
         // run a thread after 2 seconds to start the home screen
         handler.postDelayed(new Runnable() {
 
-            @Override
             public void run() {
 
                 // make sure we close the splash screen so the user won't come back when it presses back key

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import com.example.Rangi.R;
 
 public class LoginScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {

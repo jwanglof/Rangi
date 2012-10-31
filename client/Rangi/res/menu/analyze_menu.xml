@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:id="@+id/m_square_tool"
+              android:title="@string/m_square_tool" />
+        <item android:id="@+id/m_circle_tool"
+              android:title="@string/m_circle_tool"  />
+        <item android:id="@+id/m_analyze_tool"
+              android:title="@string/m_analyze_tool" />
+</menu>

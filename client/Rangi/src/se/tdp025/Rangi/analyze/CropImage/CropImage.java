@@ -102,7 +102,8 @@ public class CropImage extends MonitoredActivity {
 
             mSaveUri = (Uri) this.getIntent().getExtras().get("image-uri");
             mBitmap = getBitmap();
-
+            Log.v(TAG, "HEIGHT: " + mBitmap.getHeight());
+            Log.v(TAG, "WIDTH: " + mBitmap.getWidth());
             mAspectX = extras.getInt("aspectX");
             mAspectY = extras.getInt("aspectY");
             mOutputX = extras.getInt("outputX");
@@ -449,8 +450,19 @@ public class CropImage extends MonitoredActivity {
             Rect imageRect = new Rect(0, 0, width, height);
 
             // make the default size about 4/5 of the width or height
+            // CROPSIZE
             int cropWidth = Math.min(width, height) * 4 / 5;
-            int cropHeight = cropWidth;
+            int cropHeight =  cropWidth;
+
+            if(cropWidth > 500) {
+                cropWidth = 500;
+            }
+
+            if(cropHeight > 500) {
+                cropHeight = 500;
+            }
+
+
 
             if (mAspectX != 0 && mAspectY != 0) {
                 if (mAspectX > mAspectY) {

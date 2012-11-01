@@ -19,6 +19,7 @@ package se.tdp025.Rangi.analyze.CropImage;
 
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import se.tdp025.Rangi.R;
 
@@ -28,7 +29,7 @@ import se.tdp025.Rangi.R;
 // space to screen space.
 public class HighlightView {
     @SuppressWarnings("unused")
-    private static final String TAG = "HighlightView";
+    private static final String TAG = "Rangi_HighlightView";
     View mContext;  // The View displaying the image.
 
     public static final int GROW_NONE        = (1 << 0);
@@ -337,9 +338,16 @@ public class HighlightView {
             r.offset(0F, -(r.bottom - mImageRect.bottom));
         }
 
-        mCropRect.set(r);
-        mDrawRect = computeLayout();
-        mContext.invalidate();
+        Log.v(TAG, "Height: " + r.height());
+        Log.v(TAG, "Width: " + r.width());
+
+        if(r.height() < 500F && r.width() < 500F) {
+            mCropRect.set(r);
+            mDrawRect = computeLayout();
+            mContext.invalidate();
+        }
+        Log.v(TAG, "After Height: " + mCropRect.height());
+        Log.v(TAG, "After Width: " + mCropRect.width());
     }
 
     // Returns the cropping rectangle in image space.

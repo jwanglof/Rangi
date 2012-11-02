@@ -76,7 +76,7 @@ public class CropImage extends MonitoredActivity {
     public HighlightView mCrop;
 
     private IImage mImage;
-
+    
     private int disableMenuButton = R.id.m_square_tool;
 
     @Override

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_name">Rangi - Camera</string>
+    <string name="app_name">Rangi</string>
+    <string name="m_square_tool">Square</string>
+    <string name="m_circle_tool">Circle</string>
+    <string name="m_freehand_tool">Freehand</string>
+    <string name="m_analyze_tool">Analyze</string>
+</resources>

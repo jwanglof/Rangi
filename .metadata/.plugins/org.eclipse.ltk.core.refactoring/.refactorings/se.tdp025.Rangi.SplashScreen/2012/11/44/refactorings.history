@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;se.tdp025.Rangi.SplashScreen/res/drawable/buttonBackground.9.png&apos; to &apos;button_background.9.png&apos;" description="Rename resource &apos;buttonBackground.9.png&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="res/drawable/buttonBackground.9.png" name="button_background.9.png" stamp="1351777571314" updateReferences="true"/>
-</session>

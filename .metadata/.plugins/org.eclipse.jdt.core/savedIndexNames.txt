@@ -1,5 +1,0 @@
-INDEX VERSION 1.126+/Users/hforsberg/Dropbox/tdp025_entreprenoriell/Rangi/.metadata/.plugins/org.eclipse.jdt.core
-1512954323.index
-329553092.index
-3571998620.index
-101281190.index

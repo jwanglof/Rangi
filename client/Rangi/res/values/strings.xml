@@ -8,4 +8,9 @@
     <string name="m_analyze_tool">Analyze</string>
     <string name="avg_color_text">Average color:</string>
     <string name="top_ten_colors">Top 10 colors:</string>
+    <string name="gallery">Gallery</string>
+    <string name="saved_colors">Saved Colors</string>
+    <string name="camera">Camera</string>
+    <string name="in_app_payment">In-app payment</string>
+    <string name="settings">Settings</string>
 </resources>

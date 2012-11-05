@@ -7,7 +7,7 @@ build.xml
 .classpath
 .project
 .settings
-
+.metadata
 
 # built application files
 *.apk

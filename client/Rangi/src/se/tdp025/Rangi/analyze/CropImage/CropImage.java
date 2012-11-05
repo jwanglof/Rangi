@@ -35,10 +35,11 @@ import android.view.Window;
 import android.widget.Toast;
 
 import se.tdp025.Rangi.R;
+import se.tdp025.Rangi.analyze.AnalyzeView;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -150,7 +151,6 @@ public class CropImage extends MonitoredActivity {
 
         switch (item.getItemId()) {
             case R.id.m_analyze_tool:
-                disableMenuButton = R.id.m_analyze_tool;
                 analyze();
                 break;
             case R.id.m_circle_tool:
@@ -169,7 +169,7 @@ public class CropImage extends MonitoredActivity {
 
     public void squareTool() {
         Log.d(TAG, "squareTool function.");
-        Toast.makeText(this, "squareTool", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "squareTool", Toast.LENGTH_SHORT).show();
         mCircleCrop = false;
         mAspectX = 0;
         mAspectY = 0;
@@ -178,7 +178,7 @@ public class CropImage extends MonitoredActivity {
 
     public void circleTool() {
         Log.d(TAG, "circleTool function.");
-        Toast.makeText(this, "circleTool", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "circleTool", Toast.LENGTH_SHORT).show();
         mCircleCrop = true;
         mAspectX = 1;
         mAspectY = 1;
@@ -187,7 +187,29 @@ public class CropImage extends MonitoredActivity {
 
     public void analyze() {
         Log.d(TAG, "analyze function.");
-        Toast.makeText(this, "analyze", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "analyze", Toast.LENGTH_SHORT).show();
+        Bitmap croppedImage = onSaveClicked();
+        Log.v(TAG, "analyze - Height: " + croppedImage.getHeight());
+        Log.v(TAG, "analyze - Width: " + croppedImage.getWidth());
+
+        mSaving = false;
+        if(croppedImage != null) {
+            final Bitmap b = croppedImage;
+            final Intent analyze = new Intent(this, AnalyzeView.class);
+            Util.startBackgroundJob(this, null, "Cutting image",
+                    new Runnable() {
+                        public void run() {
+                            //saveOutput(analyze, b);
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
+                            analyze.putExtra("image-byteArray", bs.toByteArray());
+                            startActivity(analyze);
+                        }
+                    }, mHandler);
+        }
+        else {
+            Log.v(TAG, "analyze - croppedImage is null");
+        }
     }
 
     private Bitmap getBitmap() {
@@ -244,14 +266,14 @@ public class CropImage extends MonitoredActivity {
 
 
 
-    private void onSaveClicked() {
+    private Bitmap onSaveClicked() {
         // TODO this code needs to change to use the decode/crop/encode single
         // step api so that we don't require that the whole (possibly large)
         // bitmap doesn't have to be read into memory
-        if (mSaving) return;
+        if (mSaving) return null;
 
         if (mCrop == null) {
-            return;
+            return null;
         }
 
         mSaving = true;
@@ -330,8 +352,9 @@ public class CropImage extends MonitoredActivity {
                 croppedImage = b;
             }
         }
+        return croppedImage;
 
-        // Return the cropped image directly or save it to the specified URI.
+        /*// Return the cropped image directly or save it to the specified URI.
         Bundle myExtras = getIntent().getExtras();
         if (myExtras != null && (myExtras.getParcelable("data") != null
                 || myExtras.getBoolean("return-data"))) {
@@ -348,14 +371,23 @@ public class CropImage extends MonitoredActivity {
                             saveOutput(b);
                         }
                     }, mHandler);
-        }
+        }    */
     }
 
-    private void saveOutput(Bitmap croppedImage) {
-        if (mSaveUri != null) {
+    private void saveOutput(Intent intent, Bitmap croppedImage) {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "Rangi");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File croppedFile = new File(mediaStorageDir.getPath() + File.separator +
+                "RANGI_IMG_"+ timeStamp + ".jpg");
+        Uri croppedUri = Uri.fromFile(croppedFile);
+
+        if (croppedUri != null) {
             OutputStream outputStream = null;
+
             try {
-                outputStream = mContentResolver.openOutputStream(mSaveUri);
+
+                outputStream = mContentResolver.openOutputStream(croppedUri);
                 if (outputStream != null) {
                     croppedImage.compress(mOutputFormat, 75, outputStream);
                 }
@@ -366,13 +398,13 @@ public class CropImage extends MonitoredActivity {
                 Util.closeSilently(outputStream);
             }
             Bundle extras = new Bundle();
-            setResult(Activity.RESULT_OK, new Intent(mSaveUri.toString())
-                    .putExtras(extras));
+            intent.putExtra("cropped-image-uri", croppedUri);
+            startActivity(intent);
         } else {
             Log.e(TAG, "not defined image url");
         }
         croppedImage.recycle();
-        finish();
+        //finish();
     }
 
     @Override

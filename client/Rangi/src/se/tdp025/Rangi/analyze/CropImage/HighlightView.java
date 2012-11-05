@@ -338,16 +338,11 @@ public class HighlightView {
             r.offset(0F, -(r.bottom - mImageRect.bottom));
         }
 
-        Log.v(TAG, "Height: " + r.height());
-        Log.v(TAG, "Width: " + r.width());
-
         if(r.height() < 500F && r.width() < 500F) {
             mCropRect.set(r);
             mDrawRect = computeLayout();
             mContext.invalidate();
         }
-        Log.v(TAG, "After Height: " + mCropRect.height());
-        Log.v(TAG, "After Width: " + mCropRect.width());
     }
 
     // Returns the cropping rectangle in image space.

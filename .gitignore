@@ -2,6 +2,7 @@
 build.xml
 .idea
 
+
 #Eclipse - Android related files#
 .classpath
 .project
@@ -11,6 +12,8 @@ build.xml
 # built application files
 *.apk
 *.ap_
+Rangi.apk.res
+
 
 # files for the dex VM
 *.dex
@@ -21,6 +24,7 @@ build.xml
 # generated files
 bin/
 gen/
+out/
 
 # Local configuration file (sdk path, etc)
 local.properties

@@ -413,12 +413,19 @@ public class CropImage extends MonitoredActivity {
         BitmapManager.instance().cancelThreadDecoding(mDecodingThreads);
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mBitmap.recycle();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BitmapManager.instance().allowThreadDecoding(mDecodingThreads);
+    }
 
     public Runnable mRunFaceDetection = new Runnable() {
         @SuppressWarnings("hiding")

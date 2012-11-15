@@ -30,13 +30,16 @@
 
     </LinearLayout>
 
-	<LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+<LinearLayout
 	    android:layout_width="fill_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
+	    android:layout_height="fill_parent"
 	    android:gravity="center_vertical|center_horizontal|center"
-	    android:orientation="vertical"
-	    android:scrollbars="horizontal|vertical" >
+	    android:orientation="vertical">
 
     <Button
         android:id="@+id/camera_button"
@@ -122,4 +125,8 @@
         android:textSize="@dimen/button_text_size"
         android:textStyle="bold" />
 		</LinearLayout>
+
+    </ScrollView>
+
+	
 </LinearLayout>

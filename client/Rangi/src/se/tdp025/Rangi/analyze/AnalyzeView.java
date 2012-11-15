@@ -5,14 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,11 +17,8 @@ import android.widget.Toast;
 import com.jabistudio.androidjhlabs.filter.BlockFilter;
 import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 import se.tdp025.Rangi.R;
-import se.tdp025.Rangi.analyze.CropImage.Util;
 import se.tdp025.Rangi.settings.Settings;
 
-import java.io.*;
-import java.math.BigInteger;
 import java.util.*;
 
 public class AnalyzeView extends Activity {
@@ -43,9 +35,7 @@ public class AnalyzeView extends Activity {
         super.onCreate(savedInstanceState);
         this.context = this;
 
-        setContentView(R.layout.test_view);
-
-        //Uri imageUri = (Uri) this.getIntent().getExtras().get("cropped-image-uri");
+        setContentView(R.layout.result_view);
 
         imageView = (ImageView) findViewById(R.id.testingImageView);
         image = BitmapFactory.decodeByteArray(
@@ -142,6 +132,7 @@ public class AnalyzeView extends Activity {
                     int y = 0;
                     for(int j = 0; j < height / blockSizeH; j++) {
                         int tempY = y + (blockSizeH / 2);
+                        Log.v(TAG, "COLOR CODE: " + image.getPixel(tempX, tempY));
                         colorArray.add(image.getPixel(tempX, tempY));
                         y += blockSizeH;
                     }
@@ -189,6 +180,7 @@ public class AnalyzeView extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "Color of adapter:" + colorAdapter.getItem(i));
+                Toast.makeText(context,"Color code: " + colorAdapter.getItem(i), Toast.LENGTH_SHORT).show();
             }
         });
 

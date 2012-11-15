@@ -494,11 +494,11 @@ public class CropImage extends MonitoredActivity {
             int cropHeight =  cropWidth;
 
             if(cropWidth > 500) {
-                cropWidth = 500;
+                cropWidth = 400;
             }
 
             if(cropHeight > 500) {
-                cropHeight = 500;
+                cropHeight = 400;
             }
 
 

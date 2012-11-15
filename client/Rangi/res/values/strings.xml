@@ -6,8 +6,7 @@
     <string name="m_circle_tool">Circle</string>
     <string name="m_freehand_tool">Freehand</string>
     <string name="m_analyze_tool">Analyze</string>
-    <string name="avg_color_text">Average color:</string>
-    <string name="top_ten_colors">Top 10 colors:</string>
+    <string name="top_ten_colors"></string>
     <string name="gallery">Gallery</string>
     <string name="saved_colors">Saved Colors</string>
     <string name="camera">Camera</string>

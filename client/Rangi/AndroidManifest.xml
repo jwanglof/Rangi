@@ -31,7 +31,7 @@
         </activity>
         <activity android:name="se.tdp025.Rangi.gallery.BrowseGallery" android:configChanges="orientation"/>
         <activity android:name="se.tdp025.Rangi.analyze.AnalyzeView"
-                  android:configChanges="orientation"/>
+                  />
         <activity android:name="se.tdp025.Rangi.settings.Settings" android:theme="@android:style/Theme.NoTitleBar" />
     </application>
 </manifest>

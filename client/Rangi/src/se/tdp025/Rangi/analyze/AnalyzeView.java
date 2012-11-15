@@ -2,162 +2,175 @@ package se.tdp025.Rangi.analyze;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.jabistudio.androidjhlabs.filter.BlockFilter;
+import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
 import se.tdp025.Rangi.R;
-import se.tdp025.Rangi.analyze.CropImage.Util;
+import se.tdp025.Rangi.settings.Settings;
 
-import java.io.*;
-import java.math.BigInteger;
 import java.util.*;
 
 public class AnalyzeView extends Activity {
 
     private static final String TAG = "Rangi_analyze";
-    private HashMap<Integer, Integer> pixelHashCount;
     private ColorAdapter colorAdapter;
-    private final Handler handler = new Handler();
+    private int[] colors;
+    private Context context;
+
+    private ImageView imageView;
+    private Bitmap image;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pixelHashCount = new HashMap<Integer, Integer>();
+        this.context = this;
 
-        setContentView(R.layout.test_view);
+        setContentView(R.layout.result_view);
 
-        Uri imageUri = (Uri) this.getIntent().getExtras().get("cropped-image-uri");
-
-        ImageView imageView = (ImageView) findViewById(R.id.testingImageView);
-        final Bitmap croppedBitmap = BitmapFactory.decodeByteArray(
+        imageView = (ImageView) findViewById(R.id.testingImageView);
+        image = BitmapFactory.decodeByteArray(
                 getIntent().getByteArrayExtra("image-byteArray"), 0, getIntent().getByteArrayExtra("image-byteArray").length);
-        imageView.setImageBitmap(croppedBitmap);
-
 
         final ProgressDialog dialog = ProgressDialog.show(this, null, "Analyze pixels", true, false);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int count = 0;
+                Drawable drawable = new BitmapDrawable(getResources(),image);
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                colors = AndroidUtils.drawableToIntArray(drawable);
 
-                Log.d(TAG, "Bitmap height: " + croppedBitmap.getHeight());
-                Log.d(TAG, "Bitmap width: " + croppedBitmap.getWidth());
+                BlockFilter filter = new BlockFilter();
 
-                for(int i = 0; i < croppedBitmap.getHeight(); i++)
-                    for(int j = 0; j < croppedBitmap.getWidth(); j++) {
+                int block = Settings.getNumberOfColors(context);
 
-                        if(croppedBitmap.getWidth() < j)
-                            Log.d(TAG, "j: " + j);
-                        int pixel_index = croppedBitmap.getPixel(j, i);
-                        if(pixel_index != 0) {
-                            if(pixelHashCount.containsKey(pixel_index)) {
-                                int pixel_i = pixelHashCount.get(pixel_index);
-                                pixel_i++;
-                                pixelHashCount.put(pixel_index, pixel_i);
-                            } else{
-                                pixelHashCount.put(pixel_index, 1);
-                            }
-                            count++;
-                        }
+                int blockSizeW = width;
+                int blockSizeH = height;
+
+                // 2, 4, 6, 9
+                if(height > width) {
+                    if(block % 10 == 0) {
+                        blockSizeW = width / (block / 5);
+                        blockSizeH = height / (block / 2);
                     }
-
-
-                Comparator<int[]> comparator = new integerComparator();
-                PriorityQueue<int[]> queue = new PriorityQueue<int[]>(10, comparator);
-
-
-                for (int key : pixelHashCount.keySet()) {
-                    int[] values = new int[] {key, pixelHashCount.get(key)};
-
-
-                    if(queue.size() < 10)
-                        queue.add(values);
-                    else if(values[1] > queue.peek()[1]) {
-                        queue.poll();
-                        queue.add(values);
-
+                    else if(block % 9 == 0) {
+                        blockSizeW = width / (block / 3);
+                        blockSizeH = height / (block / 3);
+                    }
+                    else if(block % 6 == 0) {
+                        blockSizeW = width / (block / 3);
+                        blockSizeH = height / (block / 2);
+                    }
+                    else if(block % 4 == 0 && block != 4) {
+                        blockSizeW = width / (block / 4);
+                        blockSizeH = height / (block / 2);
+                    }
+                    else if(block % 2 == 0) {
+                        blockSizeW = width / (block / 2);
+                        blockSizeH = height / (block / 2);
+                    }
+                    else {
+                        if(height > width)
+                            blockSizeW = width / block;
+                        else
+                            blockSizeH = height / block;
+                    }
+                }
+                else {
+                    if(block % 10 == 0) {
+                        blockSizeW = width / (block / 2);
+                        blockSizeH = height / (block / 5);
+                    }
+                    else if(block % 9 == 0) {
+                        blockSizeW = width / (block / 3);
+                        blockSizeH = height / (block / 3);
+                    }
+                    else if(block % 6 == 0) {
+                        blockSizeW = width / (block / 2);
+                        blockSizeH = height / (block / 3);
+                    }
+                    else if(block % 4 == 0 && block != 4) {
+                        blockSizeW = width / (block / 2);
+                        blockSizeH = height / (block / 4);
+                    }
+                    else if(block % 2 == 0) {
+                        blockSizeW = width / (block / 2);
+                        blockSizeH = height / (block / 2);
+                    }
+                    else {
+                        if(height > width)
+                            blockSizeW = width / block;
+                        else
+                            blockSizeH = height / block;
                     }
                 }
 
+                filter.setBlockSize(blockSizeH, blockSizeW);
 
-                Log.d(TAG, "Count: "  + count);
-                Log.d(TAG, "Array count: " + pixelHashCount.size());
-                Log.d(TAG, "Queue size: " + queue.size());
+                colors = filter.filter2(colors, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 
+                if(image != null){
+                    image.recycle();
+                    image = null;
+                }
 
-
-
+                image = Bitmap.createBitmap(colors, 0, width, width, height, Bitmap.Config.ARGB_8888);
                 ArrayList<Integer> colorArray = new ArrayList<Integer>();
-                BigInteger avgColor = BigInteger.valueOf(0);
-                int avgColorCount = 0;
-                Iterator it = queue.iterator();
-                while(it.hasNext())
-                {
-                    int[] iValue= (int[]) it.next();
-                    BigInteger multi = BigInteger.valueOf(iValue[0]).multiply(BigInteger.valueOf(iValue[1]));
-                    avgColor = avgColor.add(multi);
-                    avgColorCount += iValue[1];
-                    Log.d(TAG, "Color pixel :" + iValue[0] + " | Count: " + iValue[1]);
-                    colorArray.add(iValue[0]);
+                int x = 0;
+                for(int i = 0; i < width / blockSizeW; i++) {
+                    int tempX = x + (blockSizeW / 2);
+                    int y = 0;
+                    for(int j = 0; j < height / blockSizeH; j++) {
+                        int tempY = y + (blockSizeH / 2);
+                        Log.v(TAG, "COLOR CODE: " + image.getPixel(tempX, tempY));
+                        colorArray.add(image.getPixel(tempX, tempY));
+                        y += blockSizeH;
+                    }
+                    x += blockSizeW;
                 }
 
-                final int avgColorF = avgColor.divide(BigInteger.valueOf(avgColorCount)).intValue();
-                Log.d(TAG, "Average Color: " + avgColor.toString());
-                dialog.dismiss();
+
+                Log.v(TAG, "Height: " + height);
+                Log.v(TAG, "Width: " + width);
+                Log.v(TAG, "BlockSizeH: " + blockSizeH);
+                Log.v(TAG, "BlockSizeW: " + blockSizeW);
+
+                Log.d(TAG, "AnalyzeView-Colors: " + colors.length);
+
                 final ArrayList<Integer> colorArrayF = colorArray;
-                handler.post(new Runnable() {
+                AnalyzeView.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        populateView(avgColorF, colorArrayF);
+                        imageView.setImageBitmap(image);
+                        populateView(colorArrayF);
+                        dialog.dismiss();
                     }
                 });
-            }
 
-            class integerComparator implements Comparator<int[]> {
-                @Override
-                public int compare(int[] x, int[] y) {
-                    if (x[1] < y[1])
-                    {
-                        return -1;
-                    }
-                    if (x[1] > y[1])
-                    {
-                        return 1;
-                    }
-                    return 0;
-                }
             }
         }).start();
     }
 
+    @Override
+    protected void onDestroy() {
+        if(image != null){
+            image.recycle();
+            image = null;
+        }
+        super.onDestroy();
+    }
 
-    public void populateView(final int avgColor, ArrayList<Integer> colors) {
-
-        ImageView imageView = (ImageView)findViewById(R.id.avg_image);
-
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-        Bitmap bmp = Bitmap.createBitmap(100, 30, conf); // this creates a MUTABLE bitmap
-        Canvas canvas = new Canvas(bmp);
-        canvas.drawColor(avgColor);
-        imageView.setImageBitmap(bmp);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Avg color: " + avgColor);
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-
+    public void populateView( ArrayList<Integer> colors) {
 
         ListView listView = (ListView)findViewById(R.id.list);
         colorAdapter = new ColorAdapter(this, colors);
@@ -167,6 +180,7 @@ public class AnalyzeView extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "Color of adapter:" + colorAdapter.getItem(i));
+                Toast.makeText(context,"Color code: " + colorAdapter.getItem(i), Toast.LENGTH_SHORT).show();
             }
         });
 

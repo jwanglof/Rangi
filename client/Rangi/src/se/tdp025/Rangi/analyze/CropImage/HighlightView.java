@@ -338,7 +338,7 @@ public class HighlightView {
             r.offset(0F, -(r.bottom - mImageRect.bottom));
         }
 
-        if(r.height() < 500F && r.width() < 500F) {
+        if(r.height() <= 500F && r.width() <= 500F) {
             mCropRect.set(r);
             mDrawRect = computeLayout();
             mContext.invalidate();

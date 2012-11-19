@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Registration</string>
+    <string name="explanation">Rangi Registration</string>
+    <string name="full_name">Full name</string>
+    <string name="registration_button">Register</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="password_repeat">Repeat password</string>
+    <string name="email">E-mail</string>
+</resources>

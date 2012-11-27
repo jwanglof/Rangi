@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Toast;
 import se.tdp025.Rangi.camera.Camera;
 import se.tdp025.Rangi.gallery.BrowseGallery;
-import se.tdp025.Rangi.saved.SavedColors;
 import se.tdp025.Rangi.settings.Settings;
 
 public class MainMenu extends Activity {

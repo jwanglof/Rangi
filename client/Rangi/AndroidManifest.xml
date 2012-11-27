@@ -10,6 +10,7 @@
             android:icon="@drawable/launcher">
         <activity android:name="se.tdp025.Rangi.LoginScreen"/>
         <activity android:name="se.tdp025.Rangi.SavedColors"/>
+        <activity android:name=".ColorInfo" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.MainMenu" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.SplashScreen" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
@@ -19,11 +20,10 @@
         </activity>
         <activity android:name="se.tdp025.Rangi.ViewColor"/>
 
-        <activity
-                android:name=".analyze.CropImage.CropImage"
-                android:screenOrientation="landscape"
-                android:label="CropLabel"
-                android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".analyze.CropImage.CropImage"
+                  android:screenOrientation="landscape"
+                  android:label="CropLabel"
+                  android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
         <activity android:name="se.tdp025.Rangi.camera.Camera"
@@ -33,6 +33,6 @@
         <activity android:name="se.tdp025.Rangi.gallery.BrowseGallery" android:configChanges="orientation"/>
         <activity android:name="se.tdp025.Rangi.analyze.AnalyzeView"/>
         <activity android:name="se.tdp025.Rangi.settings.Settings" android:theme="@android:style/Theme.NoTitleBar" />
-        <activity android:name="se.tdp025.Rangi.saved.SavedColors"/>
+        
     </application>
 </manifest>

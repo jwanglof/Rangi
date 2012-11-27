@@ -15,9 +15,14 @@
     <string name="splash_image">splash_image</string>
     <string name="logo">logo</string>
     <string name="menu">Menu</string>
-
+    <string name="color_headline">Color</string>
+    <string name="hex_headline">Hexadecimal</string>
+	<string name="hsv_headline">HSV</string>
+	<string name="rgb_headline">RGB</string>
+    
     <!-- Settings strings -->
     <string name="color_options">Color options</string>
     <string name="num_of_colors">Colors</string>
     <string name="num_of_colors_summary">Set the number of colors to get from an image</string>
+    
 </resources>

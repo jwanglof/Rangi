@@ -55,9 +55,9 @@ public class SavedColors extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "Color of adapter:" + colorAdapter.getItem(i));
-                Intent intent = new Intent(this, ColorInfo.class);
+                Intent intent = new Intent(SavedColors.this, ColorInfo.class);
                 intent.putExtra("color-code", Integer.parseInt(colorAdapter.getItem(i).toString()));
-                startActivity(intent);
+                SavedColors.this.startActivity(intent);           	
             }
         });
     }

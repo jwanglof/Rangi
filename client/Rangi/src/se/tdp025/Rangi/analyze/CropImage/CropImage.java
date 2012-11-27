@@ -152,6 +152,7 @@ public class CropImage extends MonitoredActivity {
         switch (item.getItemId()) {
             case R.id.m_analyze_tool:
                 analyze();
+
                 break;
             case R.id.m_circle_tool:
                 disableMenuButton = R.id.m_circle_tool;
@@ -173,6 +174,7 @@ public class CropImage extends MonitoredActivity {
         mCircleCrop = false;
         mAspectX = 0;
         mAspectY = 0;
+        mImageView.mCurrentScaleFactor = 1f;
         startFaceDetection();
     }
 
@@ -182,6 +184,7 @@ public class CropImage extends MonitoredActivity {
         mCircleCrop = true;
         mAspectX = 1;
         mAspectY = 1;
+        mImageView.mCurrentScaleFactor = 1f;
         startFaceDetection();
     }
 

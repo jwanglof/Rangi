@@ -23,6 +23,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
@@ -59,41 +60,65 @@ abstract class ImageViewTouchBase extends ImageView {
 
     int mThisWidth = -1, mThisHeight = -1;
 
-    float mMaxZoom;
-    
-    int mScrollY;
-    
-    int mScrollX;
-    
+
     int mLeft;
-    
+
     int mRight;
-    
+
     int mTop;
-    
+
     int mBottom;
-    
-    int mPaddingTop;
-    
-    int mPaddingBottom;
-    
-    int mPaddingLeft;
-    
-    int mPaddingRight;
 
-    // ImageViewTouchBase will pass a Bitmap to the Recycler if it has finished
-    // its use of that Bitmap.
-    public interface Recycler {
-        public void recycle(Bitmap b);
+    protected Handler mHandler = new Handler();
+
+    private Runnable mOnLayoutRunnable = null;
+
+
+    protected Cubic mCubicEasing = new Cubic();
+
+    protected float mMaxZoom;
+    protected float mMinZoom = -1;
+    protected boolean mFitToScreen = false;
+    final protected float MAX_ZOOM = 2.0f;
+    final protected int DEFAULT_ANIMATION_DURATION = 200;
+
+    protected RectF mBitmapRect = new RectF();
+    protected RectF mCenterRect = new RectF();
+    protected RectF mScrollRect = new RectF();
+
+
+
+
+    public ImageViewTouchBase(Context context) {
+        super(context);
+        init();
     }
 
-    public void setRecycler(Recycler r) {
-        mRecycler = r;
+    public ImageViewTouchBase(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
     }
 
-    private Recycler mRecycler;
+    public void clear() {
+        setImageBitmapResetBase(null, true);
+    }
 
-    @Override
+    protected void init() {
+        setScaleType(ScaleType.MATRIX);
+    }
+
+    public void setFitToScreen(boolean value) {
+        if (value != mFitToScreen) {
+            mFitToScreen = value;
+            requestLayout();
+        }
+    }
+
+    public void setMinZoom(float value) {
+        Log.d(TAG,"minZoom: " + value);
+        mMinZoom = value;         }
+
+    @Override //?
     protected void onLayout(boolean changed, int left, int top,
                             int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -115,22 +140,6 @@ abstract class ImageViewTouchBase extends ImageView {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && getScale() > 1.0f) {
-            // If we're zoomed in, pressing Back jumps out to show the entire
-            // image, otherwise Back returns the user to the gallery.
-            zoomTo(1.0f);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    protected Handler mHandler = new Handler();
-
-    protected int mLastXTouchPos;
-    protected int mLastYTouchPos;
-
-    @Override
     public void setImageBitmap(Bitmap bitmap) {
         setImageBitmap(bitmap, 0);
     }
@@ -146,26 +155,29 @@ abstract class ImageViewTouchBase extends ImageView {
         mBitmapDisplayed.setBitmap(bitmap);
         mBitmapDisplayed.setRotation(rotation);
 
-        if (old != null && old != bitmap && mRecycler != null) {
-            mRecycler.recycle(old);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && getScale() > 1.0f) {
+            // If we're zoomed in, pressing Back jumps out to show the entire
+            // image, otherwise Back returns the user to the gallery.
+            zoomTo(1.0f);
+            return true;
         }
+        return super.onKeyDown(keyCode, event);
     }
 
-    public void clear() {
-        setImageBitmapResetBase(null, true);
-    }
-
-    private Runnable mOnLayoutRunnable = null;
 
     // This function changes bitmap, reset base matrix according to the size
     // of the bitmap, and optionally reset the supplementary matrix.
     public void setImageBitmapResetBase(final Bitmap bitmap,
-            final boolean resetSupp) {
+                                        final boolean resetSupp) {
         setImageRotateBitmapResetBase(new RotateBitmap(bitmap), resetSupp);
     }
 
     public void setImageRotateBitmapResetBase(final RotateBitmap bitmap,
-            final boolean resetSupp) {
+                                              final boolean resetSupp) {
         final int viewWidth = getWidth();
 
         if (viewWidth <= 0)  {
@@ -191,6 +203,25 @@ abstract class ImageViewTouchBase extends ImageView {
         setImageMatrix(getImageViewMatrix());
         mMaxZoom = maxZoom();
     }
+
+    protected float minZoom() {
+        return 1F;
+    }
+
+    public float getMaxZoom() {
+        if ( mMaxZoom < 1 ) {
+            mMaxZoom = maxZoom();
+        }
+        return mMaxZoom;
+    }
+
+    public float getMinZoom() {
+        if ( mMinZoom < 0 ) {
+            mMinZoom = minZoom();
+        }
+        return mMinZoom;
+    }
+
 
     // Center as much as possible in one or both axis.  Centering is
     // defined as follows:  if the image is scaled down below the
@@ -241,19 +272,8 @@ abstract class ImageViewTouchBase extends ImageView {
         setImageMatrix(getImageViewMatrix());
     }
 
-    public ImageViewTouchBase(Context context) {
-        super(context);
-        init();
-    }
 
-    public ImageViewTouchBase(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
 
-    private void init() {
-        setScaleType(ScaleType.MATRIX);
-    }
 
     protected float getValue(Matrix matrix, int whichValue) {
         matrix.getValues(mMatrixValues);
@@ -332,24 +352,10 @@ abstract class ImageViewTouchBase extends ImageView {
         center(true, true);
     }
 
-    protected void zoomTo(final float scale, final float centerX,
-                          final float centerY, final float durationMs) {
-        final float incrementPerMs = (scale - getScale()) / durationMs;
-        final float oldScale = getScale();
-        final long startTime = System.currentTimeMillis();
-
-        mHandler.post(new Runnable() {
-            public void run() {
-                long now = System.currentTimeMillis();
-                float currentMs = Math.min(durationMs, now - startTime);
-                float target = oldScale + (incrementPerMs * currentMs);
-                zoomTo(target, centerX, centerY);
-
-                if (currentMs < durationMs) {
-                    mHandler.post(this);
-                }
-            }
-        });
+    public void zoomTo( float scale, float durationMs ) {
+        float cx = getWidth() / 2F;
+        float cy = getHeight() / 2F;
+        zoomTo( scale, cx, cy, durationMs );
     }
 
     protected void zoomTo(float scale) {
@@ -405,10 +411,156 @@ abstract class ImageViewTouchBase extends ImageView {
 
     protected void postTranslate(float dx, float dy) {
         mSuppMatrix.postTranslate(dx, dy);
+        setImageMatrix( getImageViewMatrix() );
     }
 
     protected void panBy(float dx, float dy) {
+        center( true, true );
         postTranslate(dx, dy);
         setImageMatrix(getImageViewMatrix());
     }
+
+    protected void panBy( double dx, double dy ) {
+        RectF rect = getBitmapRect();
+        mScrollRect.set( (float) dx, (float) dy, 0, 0 );
+        updateRect( rect, mScrollRect );
+        postTranslate( mScrollRect.left, mScrollRect.top );
+        center( true, true );
+    }
+
+    public void scrollBy( double x, double y ) {
+        panBy( x, y );
+    }
+
+
+    protected RectF getBitmapRect() {
+        return getBitmapRect( mSuppMatrix );
+    }
+
+    protected RectF getBitmapRect( Matrix supportMatrix ) {
+        final Drawable drawable = getDrawable();
+
+        if ( drawable == null ) return null;
+        Matrix m = getImageViewMatrix( supportMatrix );
+        mBitmapRect.set( 0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight() );
+        m.mapRect( mBitmapRect );
+        return mBitmapRect;
+    }
+
+    public Matrix getImageViewMatrix( Matrix supportMatrix ) {
+        mDisplayMatrix.set( mBaseMatrix );
+        mDisplayMatrix.postConcat( supportMatrix );
+        return mDisplayMatrix;
+    }
+
+    protected void updateRect( RectF bitmapRect, RectF scrollRect ) {
+        float width = getWidth();
+        float height = getHeight();
+
+        if ( bitmapRect.top >= 0 && bitmapRect.bottom <= height ) scrollRect.top = 0;
+        if ( bitmapRect.left >= 0 && bitmapRect.right <= width ) scrollRect.left = 0;
+        if ( bitmapRect.top + scrollRect.top >= 0 && bitmapRect.bottom > height ) scrollRect.top = (int) ( 0 - bitmapRect.top );
+        if ( bitmapRect.bottom + scrollRect.top <= ( height - 0 ) && bitmapRect.top < 0 )
+            scrollRect.top = (int) ( ( height - 0 ) - bitmapRect.bottom );
+        if ( bitmapRect.left + scrollRect.left >= 0 ) scrollRect.left = (int) ( 0 - bitmapRect.left );
+        if ( bitmapRect.right + scrollRect.left <= ( width - 0 ) ) scrollRect.left = (int) ( ( width - 0 ) - bitmapRect.right );
+    }
+
+    protected void scrollBy( float distanceX, float distanceY, final double durationMs ) {
+        final double dx = distanceX;
+        final double dy = distanceY;
+        final long startTime = System.currentTimeMillis();
+        mHandler.post( new Runnable() {
+
+            double old_x = 0;
+            double old_y = 0;
+
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                double currentMs = Math.min( durationMs, now - startTime );
+                double x = mCubicEasing.easeOut( currentMs, 0, dx, durationMs );
+                double y = mCubicEasing.easeOut( currentMs, 0, dy, durationMs );
+                panBy( ( x - old_x ), ( y - old_y ) );
+                old_x = x;
+                old_y = y;
+                if ( currentMs < durationMs ) {
+                    mHandler.post( this );
+                } else {
+                    RectF centerRect = getCenter( mSuppMatrix, true, true );
+                    if ( centerRect.left != 0 || centerRect.top != 0 ) scrollBy( centerRect.left, centerRect.top );
+                }
+            }
+        } );
+    }
+
+    protected RectF getCenter( Matrix supportMatrix, boolean horizontal, boolean vertical ) {
+        final Drawable drawable = getDrawable();
+
+        if ( drawable == null ) return new RectF( 0, 0, 0, 0 );
+
+        mCenterRect.set( 0, 0, 0, 0 );
+        RectF rect = getBitmapRect( supportMatrix );
+        float height = rect.height();
+        float width = rect.width();
+        float deltaX = 0, deltaY = 0;
+        if ( vertical ) {
+            int viewHeight = getHeight();
+            if ( height < viewHeight ) {
+                deltaY = ( viewHeight - height ) / 2 - rect.top;
+            } else if ( rect.top > 0 ) {
+                deltaY = -rect.top;
+            } else if ( rect.bottom < viewHeight ) {
+                deltaY = getHeight() - rect.bottom;
+            }
+        }
+        if ( horizontal ) {
+            int viewWidth = getWidth();
+            if ( width < viewWidth ) {
+                deltaX = ( viewWidth - width ) / 2 - rect.left;
+            } else if ( rect.left > 0 ) {
+                deltaX = -rect.left;
+            } else if ( rect.right < viewWidth ) {
+                deltaX = viewWidth - rect.right;
+            }
+        }
+        mCenterRect.set( deltaX, deltaY, 0, 0 );
+        return mCenterRect;
+    }
+
+    protected void zoomTo( float scale, float centerX, float centerY, final float durationMs ) {
+        if ( scale > getMaxZoom() ) scale = getMaxZoom();
+        final long startTime = System.currentTimeMillis();
+        final float oldScale = getScale();
+
+        final float deltaScale = scale - oldScale;
+
+        Matrix m = new Matrix( mSuppMatrix );
+        m.postScale( scale, scale, centerX, centerY );
+        RectF rect = getCenter( m, true, true );
+
+        final float destX = centerX + rect.left * scale;
+        final float destY = centerY + rect.top * scale;
+
+        mHandler.post( new Runnable() {
+
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                float currentMs = Math.min( durationMs, now - startTime );
+                float newScale = (float) mCubicEasing.easeInOut( currentMs, 0, deltaScale, durationMs );
+                zoomTo( oldScale + newScale, destX, destY );
+                if ( currentMs < durationMs ) {
+                    mHandler.post( this );
+                } else {
+                    onZoomAnimationCompleted( getScale() );
+                    center( true, true );
+                }
+            }
+        } );
+    }
+
+    protected void onZoom( float scale ) {}
+
+    protected void onZoomAnimationCompleted( float scale ) {}
 }

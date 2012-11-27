@@ -3,6 +3,7 @@ package se.tdp025.Rangi.analyze;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.jabistudio.androidjhlabs.filter.BlockFilter;
 import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
+import se.tdp025.Rangi.ColorInfo;
 import se.tdp025.Rangi.R;
 import se.tdp025.Rangi.settings.Settings;
 
@@ -180,7 +182,9 @@ public class AnalyzeView extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "Color of adapter:" + colorAdapter.getItem(i));
-                Toast.makeText(context,"Color code: " + colorAdapter.getItem(i), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ColorInfo.class);
+                intent.putExtra("color-code", Integer.parseInt(colorAdapter.getItem(i).toString()));
+                startActivity(intent);
             }
         });
 

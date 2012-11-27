@@ -25,62 +25,48 @@
         android:orientation="vertical"
         android:padding="10dp"
         android:scrollbars="vertical" >
-
-        	<TextView
-        	    android:id="@+id/color_headline"
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="wrap_content"
-        	    android:text="@string/color_headline"
-        	    android:textColor="#6b7f6a" />
-
-    <TextView
-        android:id="@+id/color_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#e59455" />
     
     <TextView
         android:id="@+id/hex_headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hex_headline"
-        android:textColor="#6b7f6a" />
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/hex_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#e59455" />
+        android:textColor="#868686" />
     
     <TextView
         android:id="@+id/hsv_headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hsv_headline"
-        android:textColor="#6b7f6a" />
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/hsv_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#e59455" />
+        android:textColor="#868686" />
 
     <TextView
         android:id="@+id/rgb_headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/rgb_headline"
-        android:textColor="#6b7f6a" />
+        android:textColor="#000000" />
 
     <TextView
         android:id="@+id/rgb_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#e59455" />
+        android:textColor="#868686" />
     
     </LinearLayout>
     

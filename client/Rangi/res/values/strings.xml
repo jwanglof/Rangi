@@ -24,5 +24,18 @@
     <string name="color_options">Color options</string>
     <string name="num_of_colors">Colors</string>
     <string name="num_of_colors_summary">Set the number of colors to get from an image</string>
-    
+
+    <!-- Login -->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- Register -->
+    <string name="explanation">Rangi Registration</string>
+    <string name="full_name">Full name</string>
+    <string name="password_repeat">Repeat password</string>
+    <string name="email">E-mail</string>
+
+    <!-- Login/Register Main menu -->
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
 </resources>

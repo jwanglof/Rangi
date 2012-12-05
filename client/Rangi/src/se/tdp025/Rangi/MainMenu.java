@@ -41,5 +41,4 @@ public class MainMenu extends Activity {
         Intent settings = new Intent(this, Settings.class);
         startActivity(settings);
     }
-
 }

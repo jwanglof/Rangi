@@ -16,10 +16,6 @@ import se.tdp025.Rangi.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * User: Torbjörn Kvist(torkv393)
- * Date: 2012-11-02
- */
 public class ColorAdapter extends BaseAdapter {
 
     private static final String TAG = "Rangi_ColorAdapter";

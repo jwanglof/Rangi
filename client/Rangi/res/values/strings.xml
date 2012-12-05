@@ -6,11 +6,23 @@
     <string name="m_circle_tool">Circle</string>
     <string name="m_freehand_tool">Freehand</string>
     <string name="m_analyze_tool">Analyze</string>
-    <string name="avg_color_text">Average color:</string>
-    <string name="top_ten_colors">Top 10 colors:</string>
+    <string name="top_ten_colors"></string>
     <string name="gallery">Gallery</string>
     <string name="saved_colors">Saved Colors</string>
     <string name="camera">Camera</string>
     <string name="in_app_payment">In-app payment</string>
     <string name="settings">Settings</string>
+    <string name="splash_image">splash_image</string>
+    <string name="logo">logo</string>
+    <string name="menu">Menu</string>
+    <string name="color_headline">Color</string>
+    <string name="hex_headline">Hexadecimal</string>
+	<string name="hsv_headline">HSV</string>
+	<string name="rgb_headline">RGB</string>
+    
+    <!-- Settings strings -->
+    <string name="color_options">Color options</string>
+    <string name="num_of_colors">Colors</string>
+    <string name="num_of_colors_summary">Set the number of colors to get from an image</string>
+    
 </resources>

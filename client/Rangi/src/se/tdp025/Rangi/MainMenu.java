@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Toast;
 import se.tdp025.Rangi.camera.Camera;
 import se.tdp025.Rangi.gallery.BrowseGallery;
+import se.tdp025.Rangi.SavedColors;
+import se.tdp025.Rangi.settings.Settings;
 
 public class MainMenu extends Activity {
     public void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,8 @@ public class MainMenu extends Activity {
     }
     public void saved_colors(View view) {
         Toast.makeText(this, "Saved Colors button", Toast.LENGTH_LONG).show();
-        /*Intent gallery = new Intent(this, C.class);
-        startActivity(gallery); */
+        Intent saved_colors = new Intent(this, SavedColors.class);
+        startActivity(saved_colors);
     }
     public void in_app(View view) {
         Toast.makeText(this, "In_App button", Toast.LENGTH_LONG).show();
@@ -36,8 +38,8 @@ public class MainMenu extends Activity {
     }
     public void settings(View view) {
         Toast.makeText(this, "Settings button", Toast.LENGTH_LONG).show();
-        /*Intent gallery = new Intent(this, C.class);
-        startActivity(gallery); */
+        Intent settings = new Intent(this, Settings.class);
+        startActivity(settings);
     }
 
 }

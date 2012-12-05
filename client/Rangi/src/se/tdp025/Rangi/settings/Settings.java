@@ -8,7 +8,7 @@ import se.tdp025.Rangi.R;
 
 public class Settings extends PreferenceActivity{
     private static final String OPT_NUMBER_OF_COLORS = "number_of_colors";
-    private static final int OPT_NUMBER_OF_COLORS_DEF = 4;
+    private static final int OPT_NUMBER_OF_COLORS_DEF = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

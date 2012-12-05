@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="#29000000" android:padding="10dp">
+
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rectangle_button"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rectangle_button"
+            android:layout_marginLeft="10dp"
+            android:onClick="squareTool"
+            />
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/circle_button"
+            android:layout_toRightOf="@+id/rectangle_button"
+            android:layout_alignTop="@+id/rectangle_button"
+            android:background="@drawable/circle_button_unfocus"
+            android:layout_marginLeft="40dp"
+            android:onClick="circleTool"/>
+
+    <Button
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:background="@drawable/button"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:onClick="analyze"
+            android:padding="10dp"
+            android:text="@string/m_analyze_tool"
+            android:textColor="#6b7f6a"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true" android:layout_alignTop="@+id/rectangle_button"
+            />
+</RelativeLayout>

@@ -31,5 +31,14 @@
                 android:layout_y="0dip"
         />
     </RelativeLayout>
+    <ViewStub
+            android:id="@+id/crop_menu_stub"
+            android:inflatedId="@+id/crop_menu"
+
+            android:layout="@layout/crop_menu"
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
 
 </FrameLayout>

@@ -17,17 +17,17 @@ public class MainMenu extends Activity {
     }
 
     public void camera(View view) {
-        Toast.makeText(this, "Camera button", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Camera button", Toast.LENGTH_SHORT).show();
         Intent camera = new Intent(this, Camera.class);
         startActivity(camera);
     }
     public void gallery(View view) {
-        Toast.makeText(this, "Gallery button", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Gallery button", Toast.LENGTH_SHORT).show();
         Intent gallery = new Intent(this, BrowseGallery.class);
         startActivity(gallery);
     }
     public void saved_colors(View view) {
-        Toast.makeText(this, "Saved Colors button", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Saved Colors button", Toast.LENGTH_LONG).show();
         Intent saved_colors = new Intent(this, SavedColors.class);
         startActivity(saved_colors);
     }

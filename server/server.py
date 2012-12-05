@@ -8,13 +8,22 @@ import utils
 app = Flask(__name__)
 app.secret_key = b'\xdc\xf3\xa0\\\xd9\xc8\xa8o87\x19\xc2\xdf\x88\x8f\xbf"-\x0f\x15\xe9l4l'
 
+# ==================== Utilities ==================== 
+def failed():
+	return jsonify({"success": False})
+
+def succeeded():
+	return jsonify({"success": True})
+
 # ==================== API ==================== 
 
 @app.route("/", methods = ["GET"])
 def index():
-	return render_template('index.html')
-
-# ==================== API ==================== 
+	if session.get("id", False):
+		user = db.find_user({"_id": session["id"]})
+		return render_template('colors.html', user=user)
+	else:
+		return render_template('index.html')
 
 @app.route("/register", methods = ["POST"])
 def register():
@@ -50,7 +59,8 @@ def register():
 		"password": utils.hashed_password(password, salt),
 		"salt": salt,
 		"email": email,
-		"logged_in": False
+		"logged_in": False,
+		"colors": []
 	}
 
 	db.save_user(user)
@@ -61,13 +71,36 @@ def register():
 def login():
 	username = request.form["username"].strip()
 	password = request.form["password"].strip()
-	
-	if db.validate_credentials(username, password):
-		session["username"] = username
+	user = db.validate_credentials(username, password)	
+
+	if not user == None:
+		session["id"] = user["_id"]
 		return jsonify({"success": True})
 
 	return jsonify({"success": False})
 
+@app.route("/save", methods = ["POST"])
+def save_color():
+	# Check that the user is logged in
+	user = db.find_user({"_id": session["id"]})
+	if not user:
+		print "Not logged in"
+		return failed()
+
+	# Make sure at least the hex representation
+	# was sent
+	color = request.json
+	if not color.get("hex", False):
+		print "No hex"
+		return failed()
+
+	# Add the color
+	if not db.add_color(user, color):
+		print "Failed to save color"
+		return failed()
+
+	return succeeded()
+
 if __name__ == "__main__":
 	app.debug = True
-	app.run(host="0.0.0.0")
+	app.run(host="0.0.0.0", threaded=True)

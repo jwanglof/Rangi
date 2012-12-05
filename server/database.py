@@ -14,8 +14,20 @@ def username_is_available(username):
 def validate_credentials(username, password):
 	user = db.users.find_one({"username": username})
 	if not user:
-		return False
+		return None
 
 	hashed_password = utils.hashed_password(password, user["salt"])
 
-	return user["password"] == hashed_password
+	if user["password"] == hashed_password: return user
+	return None
+
+def find_user(query):
+	return db.users.find_one(query)
+
+def add_color(user, color):
+	if not user: return False
+	if not color: return False
+
+	db.users.update(user, {"$push": {"colors": color}})
+
+	return True

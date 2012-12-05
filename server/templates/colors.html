@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}Rangi - Your Colors{% endblock %}
+
+{% block content %}
+
+<h3>Your Colors</h3>
+{% if not user.colors %}
+You haven't saved any colors.
+{% endif %}
+
+{% for color in user.colors %}
+	{% for key in color %}
+	{{ color[key]["name"] }}: {{ color[key]["value"]}}<br />
+	{% endfor %}
+{% endfor %}
+
+{% endblock %}

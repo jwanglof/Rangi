@@ -2,6 +2,11 @@
 
 {% block title %}Rangi - Startpage{% endblock %}
 
+{% block head %}
+<script src="{{ url_for('static', filename='scripts/filters.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/rangi.startpage.jquery.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 
 <canvas id="canvas">

@@ -12,6 +12,9 @@ build.xml
 # VIM swap files
 *.swp
 
+# Compiled Python
+*.pyc
+
 # built application files
 *.apk
 *.ap_

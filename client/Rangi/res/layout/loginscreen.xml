@@ -1,51 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical">
-
 <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|center_horizontal"
+        android:background="#f0f0f0"
+        android:orientation="vertical">
 
-    <EditText
-            android:id="@+id/username"
+    <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/username"
-            android:inputType="textNoSuggestions"
-            android:text="Can0n">
-    </EditText>
+            android:background="#6b7f6a"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-    <EditText
-            android:id="@+id/password"
+        <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/launcher"
+                android:contentDescription="@string/logo"/>
+
+        <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#f0f0f0" />
+
+    </LinearLayout>
+
+    <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:text="asdasd">
-    </EditText>
-
-</LinearLayout>
-
-<LinearLayout
-        android:id="@+id/buttons"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-    <Button
-            android:id="@+id/login_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/login_button"
-            android:onClick="login"/>
-</LinearLayout>
+            android:background="#f0f0f0"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:orientation="vertical"
+            android:scrollbars="vertical">
 
-</RelativeLayout>
+        <EditText
+                android:id="@+id/username"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:hint="@string/username"
+                android:inputType="textNoSuggestions"
+                android:text="Can0n">
+        </EditText>
+
+        <EditText
+                android:id="@+id/password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:text="asdasd">
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/buttons"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:id="@+id/login_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button"
+                android:gravity="center_vertical|center_horizontal|center"
+                android:onClick="login"
+                android:padding="10dp"
+                android:text="@string/login_button"
+                android:textColor="#6b7f6a"
+                android:textSize="@dimen/button_text_size"
+                android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>
 

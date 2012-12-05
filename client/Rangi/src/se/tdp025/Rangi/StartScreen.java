@@ -5,13 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Johan
- * Date: 2012-12-05
- * Time: 14:20
- * To change this template use File | Settings | File Templates.
- */
 public class StartScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

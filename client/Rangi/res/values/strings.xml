@@ -32,7 +32,6 @@
 
     <!-- Register -->
     <string name="explanation">Rangi Registration</string>
-    <string name="full_name">Full name</string>
     <string name="password_repeat">Repeat password</string>
     <string name="email">E-mail</string>
 

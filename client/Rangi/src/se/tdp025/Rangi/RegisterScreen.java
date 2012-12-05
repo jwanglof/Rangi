@@ -11,12 +11,6 @@ import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
-import org.json.*;
-import org.json.*;
-import se.tdp025.Rangi.R;
 
 import java.net.*;
 
@@ -33,7 +27,6 @@ public class RegisterScreen extends Activity {
     DataInputStream input;
     String content;
     String str;
-    int responseCode;
     org.json.JSONObject inputJson;
     String result = "";
 
@@ -43,7 +36,7 @@ public class RegisterScreen extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.registerscreen);
     }
 
     public void register(View view) {
@@ -53,7 +46,7 @@ public class RegisterScreen extends Activity {
         password_repeat = (EditText) findViewById(R.id.password_repeat);
 
         try {
-            url = new URL("http://192.168.56.101:5000/register");
+            url = new URL(Data.serverConnectionIP + "register");
             // URL Connection Channel
             urlConn = url.openConnection();
             httpConn = (HttpURLConnection) urlConn;
@@ -73,9 +66,6 @@ public class RegisterScreen extends Activity {
             printout.writeBytes(content);
             printout.flush();
             printout.close();
-
-            // This will always return 200. Perhaps add more error-codes to the server?
-            responseCode = httpConn.getResponseCode();
 
             // Get response data
             input = new DataInputStream(urlConn.getInputStream());

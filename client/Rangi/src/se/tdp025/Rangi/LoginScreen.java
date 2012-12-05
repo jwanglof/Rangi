@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.*;
 
 public class LoginScreen extends Activity {
@@ -37,7 +36,7 @@ public class LoginScreen extends Activity {
         password = (EditText) findViewById(R.id.password);
 
         try {
-            url = new URL("http://192.168.56.101:5000/login"); // Replace with real server IP/URL when in production!
+            url = new URL(Data.serverConnectionIP + "login");
             // URL Connection Channel
             urlConn = url.openConnection();
             httpConn = (HttpURLConnection) urlConn;

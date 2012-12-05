@@ -1,23 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical">
+
+<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
     <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Username"
-            android:id="@+id/editText" android:layout_gravity="left|center_vertical"/>
+            android:hint="@string/username"
+            android:inputType="textNoSuggestions"
+            android:text="Can0n">
+    </EditText>
+
     <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Password"
-            android:id="@+id/editText1" android:layout_gravity="left|center_vertical"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:id="@+id/button" android:layout_gravity="left|center_vertical" android:onClick="login"/>
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:text="asdasd">
+    </EditText>
+
 </LinearLayout>
+
+<LinearLayout
+        android:id="@+id/buttons"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+    <Button
+            android:id="@+id/login_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/login_button"
+            android:onClick="login"/>
+</LinearLayout>
+
+</RelativeLayout>
 

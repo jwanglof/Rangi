@@ -120,6 +120,7 @@ public class AnalyzeView extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(context, ColorInfo.class);
                 intent.putExtra("color-code", Integer.parseInt(colorAdapter.getItem(i).toString()));
+                intent.putExtra("show-save", true);
                 startActivity(intent);
             }
         });

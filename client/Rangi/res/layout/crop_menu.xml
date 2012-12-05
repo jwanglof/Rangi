@@ -39,7 +39,9 @@
             android:text="@string/m_analyze_tool"
             android:textColor="#6b7f6a"
             android:textSize="14dp"
+            android:layout_marginLeft="10dp"
             android:textStyle="bold"
-            android:layout_alignParentRight="true" android:layout_alignTop="@+id/rectangle_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/rectangle_button"
             />
 </RelativeLayout>

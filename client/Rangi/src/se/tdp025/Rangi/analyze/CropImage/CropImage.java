@@ -184,8 +184,10 @@ public class CropImage extends MonitoredActivity {
         Log.v(TAG, "analyze - Height: " + croppedImage.getHeight());
         Log.v(TAG, "analyze - Width: " + croppedImage.getWidth());
 
+
         mSaving = false;
         if(croppedImage != null) {
+            menuView.setVisibility(View.GONE);
             final Bitmap b = croppedImage;
             final Intent analyze = new Intent(this, AnalyzeView.class);
             Util.startBackgroundJob(this, null, "Cutting image",

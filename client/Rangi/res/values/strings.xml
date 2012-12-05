@@ -38,4 +38,7 @@
     <!-- Login/Register Main menu -->
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
+
+    <!-- DUMP -->
+    <string name="mainmenu_button">Jump to MainMenu</string>
 </resources>

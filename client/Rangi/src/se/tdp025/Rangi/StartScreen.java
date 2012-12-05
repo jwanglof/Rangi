@@ -24,10 +24,12 @@ public class StartScreen extends Activity {
     }
 
     public void register(View view) {
-        //Intent register = new Intent(this, RegisterScreen.class);
-        //startActivity(register);
-
-        Intent register = new Intent(this, MainMenu.class);
+        Intent register = new Intent(this, RegisterScreen.class);
         startActivity(register);
+    }
+
+    public void mainmenu(View view) {
+        Intent mainmenu = new Intent(this, MainMenu.class);
+        startActivity(mainmenu);
     }
 }

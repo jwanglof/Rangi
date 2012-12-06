@@ -25,6 +25,7 @@
           <path>/res-overlay</path>
         </resOverlayFolders>
         <includeSystemProguardFile>true</includeSystemProguardFile>
+        <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
         <additionalNativeLibs />
       </configuration>
     </facet>
@@ -39,3 +40,4 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
+

@@ -41,4 +41,5 @@
 
     <!-- DUMP -->
     <string name="mainmenu_button">Jump to MainMenu</string>
+    <string name="logout_button">Logout</string>
 </resources>

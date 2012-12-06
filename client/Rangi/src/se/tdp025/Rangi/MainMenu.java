@@ -2,6 +2,7 @@ package se.tdp025.Rangi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -40,5 +41,17 @@ public class MainMenu extends Activity {
         Toast.makeText(this, "Settings button", Toast.LENGTH_LONG).show();
         Intent settings = new Intent(this, Settings.class);
         startActivity(settings);
+    }
+
+    public void logout(View view) {
+        Toast.makeText(this, "You have signed off. Plz come back to us!", Toast.LENGTH_LONG).show();
+        SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = userSettings.edit();
+        editor.putBoolean("CONFIG_USER_LOGIN", false);
+        editor.commit();
+
+        // Go to login screen!!
+        Intent ss = new Intent(this, StartScreen.class);
+        startActivity(ss);
     }
 }

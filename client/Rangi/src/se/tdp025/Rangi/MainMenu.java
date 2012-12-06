@@ -48,6 +48,7 @@ public class MainMenu extends Activity {
         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
         SharedPreferences.Editor editor = userSettings.edit();
         editor.putBoolean("CONFIG_USER_LOGIN", false);
+        editor.putString("CONFIG_USER_USERNAME", "");
         editor.commit();
 
         // Go to login screen!!

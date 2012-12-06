@@ -42,6 +42,10 @@ public class RegisterScreen extends Activity {
     }
 
     public void register(View view) {
+        /*
+         * FIX!
+         * Make sure that the username doesn't contain any spaces!!
+         */
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email_address);
         password = (EditText) findViewById(R.id.password);

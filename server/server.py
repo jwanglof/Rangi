@@ -8,6 +8,7 @@ import utils
 app = Flask(__name__)
 app.secret_key = b'\xdc\xf3\xa0\\\xd9\xc8\xa8o87\x19\xc2\xdf\x88\x8f\xbf"-\x0f\x15\xe9l4l'
 
+
 # ==================== Utilities ==================== 
 def failed():
 	return jsonify({"success": False})
@@ -15,7 +16,17 @@ def failed():
 def succeeded():
 	return jsonify({"success": True})
 
-# ==================== API ==================== 
+def logged_in():
+	user = db.find_user({"_id": session["id"]})
+	return not user == None
+
+def logged_in_user():
+	if not logged_in(): return None
+	return db.find_user({"_id": session["id"]})
+
+# ==================== API ==========================
+
+color_queue = {}
 
 @app.route("/", methods = ["GET"])
 def index():
@@ -75,32 +86,62 @@ def login():
 
 	if not user == None:
 		session["id"] = user["_id"]
+		session["color_queue"] = []
 		return jsonify({"success": True})
 
 	return jsonify({"success": False})
 
 @app.route("/save", methods = ["POST"])
 def save_color():
-	# Check that the user is logged in
-	user = db.find_user({"_id": session["id"]})
-	if not user:
-		print "Not logged in"
+	if not logged_in():
 		return failed()
 
 	# Make sure at least the hex representation
 	# was sent
 	color = request.json
 	if not color.get("hex", False):
-		print "No hex"
 		return failed()
 
+	if not color.get("name"):
+		color["name"] = "Unnamed"
+
 	# Add the color
+	user = logged_in_user()
 	if not db.add_color(user, color):
-		print "Failed to save color"
 		return failed()
+
+	# Queue the color so we can send
+	# it to the client
+	if not color_queue.get(session["id"]):
+		color_queue[session["id"]] = []
+	color_queue[session["id"]].append(color)
 
 	return succeeded()
 
+@app.route("/colors", methods = ["GET"])
+def colors():
+	""" Returns the logged in users colors """
+
+	if not logged_in():
+		return failed()
+	
+	return jsonify({"success": True, "colors": user.colors})
+
+@app.route("/color_queue", methods = ["GET"])
+def poll_queue():
+	if not logged_in():
+		return failed()
+
+	if not color_queue.get(session["id"]):
+		return failed()
+
+	colors = color_queue[session["id"]]
+	color_queue[session["id"]] = []
+
+	response = jsonify({"success": True, "colors": colors})
+	print {"success": True, "colors": colors}
+	return response
+
 if __name__ == "__main__":
 	app.debug = True
-	app.run(host="0.0.0.0", threaded=True)
+	app.run(threaded=True)

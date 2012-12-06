@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Rangi - Your Colors{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/colors.css') }}" />
+
+	<script type="text/javascript">
+		STATIC_ROOT = "{{ url_for('static', filename='scripts/') }}";
+	</script>
+	<script src="{{ url_for('static', filename='scripts/rangi.colors.jquery.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% if not user.colors %}
+You haven't saved any colors.
+{% endif %}
+
+<div id="colors">
+	{% for color in user.colors %}
+		<div class="color_container">
+			<div class="color_swatch" style="background-color: {{ color['hex']['value'] }}"></div>
+			<span class="name">{{ color['name'] }}</span><br />
+			<span class="hex">{{ color['hex']['value'] }}</span>
+		</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

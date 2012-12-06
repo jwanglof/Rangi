@@ -1,0 +1,29 @@
+/* ============ colors.html ============ */
+
+body {
+	background-color: #303030;
+}
+
+.color_container {
+	background-color: #fafafa;
+	padding: 10px;
+	margin: 20px;
+	margin-right: 0px;
+	float: left;
+	font-family: "Helvetica", sans-serif;
+
+	-webkit-box-shadow: 0px 2px 2px 0px #202020;
+	-moz-box-shadow: 0px 2px 2px 0px #202020;
+	box-shadow: 0px 2px 2px 0px #202020;
+}
+
+.color_container > .name {
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.color_swatch {
+	width: 140px;
+	height: 140px;
+	margin-bottom: 10px;
+}

@@ -102,7 +102,8 @@ function login() {
 	var params = $("form[action='/login']").serialize();
 	$.post('/login', params, function(response) {
 		if(response.success)
-			console.log("Logged in");
+			// Refresh the page
+			window.location = window.location;
 		else
 			$("#alert").slideDown("fast");
 	}, 'json');

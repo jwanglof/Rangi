@@ -23,10 +23,8 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.ViewConfiguration;
+import android.view.*;
+import se.tdp025.Rangi.R;
 
 import java.util.ArrayList;
 
@@ -314,7 +312,7 @@ public class CropImageView extends ImageViewTouchBase {
     private void onLongPressed(MotionEvent e) {
         Log.v(TAG, "LongPressed");
         Activity activity = (Activity)mContext;
-        activity.openOptionsMenu();
+        activity.findViewById(R.id.crop_menu).setVisibility(View.VISIBLE);
     }
 
     @Override

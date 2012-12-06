@@ -29,9 +29,7 @@ import android.os.Handler;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
+import android.view.*;
 import android.widget.Toast;
 
 import se.tdp025.Rangi.R;
@@ -77,8 +75,8 @@ public class CropImage extends MonitoredActivity {
     public HighlightView mCrop;
 
     private IImage mImage;
-    
-    private int disableMenuButton = R.id.m_square_tool;
+
+    private View menuView;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -115,72 +113,64 @@ public class CropImage extends MonitoredActivity {
 
 
 
+
         if (mBitmap == null) {
             Log.d(TAG, "finish!!!");
             finish();
             return;
         }
-
+        menuView = ((ViewStub) findViewById(R.id.crop_menu_stub)).inflate();
+        menuView.setVisibility(View.GONE);
+        menuView.findViewById(R.id.rectangle_button).setEnabled(false);
         startFaceDetection();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.analyze_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            if ( menuView.getVisibility() == View.GONE )
+                menuView.setVisibility(View.VISIBLE);
+            else
+              menuView.setVisibility(View.GONE);
 
-    @Override
-    public boolean onPrepareOptionsMenu (Menu menu) {
-        Log.e(TAG, "onPrepareOptionsMenu ");
-        for(int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            if(item.getItemId() == disableMenuButton) {
-                item.setEnabled(false);
-            }
-            else {
-                item.setEnabled(true);
+            return true;
+        }
+        else if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            if(menuView.getVisibility() == View.VISIBLE)   {
+                menuView.setVisibility(View.GONE);
+                return true;
             }
         }
-        return super.onPrepareOptionsMenu(menu);
+        return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        item.setChecked(true);
+    public void squareTool(View view) {
+        menuView.findViewById(R.id.circle_button).setBackgroundResource(R.drawable.circle_button_unfocus);
+        menuView.findViewById(R.id.circle_button).setEnabled(true);
+        menuView.findViewById(R.id.rectangle_button).setBackgroundResource(R.drawable.rectangle_button);
+        menuView.findViewById(R.id.rectangle_button).setEnabled(false);
 
-        switch (item.getItemId()) {
-            case R.id.m_analyze_tool:
-                analyze();
+        menuView.setVisibility(View.GONE);
 
-                break;
-            case R.id.m_circle_tool:
-                disableMenuButton = R.id.m_circle_tool;
-                circleTool();
-                break;
-            case R.id.m_square_tool:
-                disableMenuButton = R.id.m_square_tool;
-                squareTool();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void squareTool() {
         Log.d(TAG, "squareTool function.");
-        Toast.makeText(this, "squareTool", Toast.LENGTH_SHORT).show();
         mCircleCrop = false;
         mAspectX = 0;
         mAspectY = 0;
         mImageView.mCurrentScaleFactor = 1f;
+
         startFaceDetection();
     }
 
-    public void circleTool() {
+    public void circleTool(View view) {
+        menuView.findViewById(R.id.circle_button).setBackgroundResource(R.drawable.circle_button);
+        menuView.findViewById(R.id.circle_button).setEnabled(false);
+        menuView.findViewById(R.id.rectangle_button).setBackgroundResource(R.drawable.rectangle_button_unfocus);
+        menuView.findViewById(R.id.rectangle_button).setEnabled(true);
+
+        menuView.setVisibility(View.GONE);
+
         Log.d(TAG, "circleTool function.");
-        Toast.makeText(this, "circleTool", Toast.LENGTH_SHORT).show();
         mCircleCrop = true;
         mAspectX = 1;
         mAspectY = 1;
@@ -188,15 +178,16 @@ public class CropImage extends MonitoredActivity {
         startFaceDetection();
     }
 
-    public void analyze() {
+    public void analyze(View view) {
         Log.d(TAG, "analyze function.");
-        Toast.makeText(this, "analyze", Toast.LENGTH_SHORT).show();
         Bitmap croppedImage = onSaveClicked();
         Log.v(TAG, "analyze - Height: " + croppedImage.getHeight());
         Log.v(TAG, "analyze - Width: " + croppedImage.getWidth());
 
+
         mSaving = false;
         if(croppedImage != null) {
+            menuView.setVisibility(View.GONE);
             final Bitmap b = croppedImage;
             final Intent analyze = new Intent(this, AnalyzeView.class);
             Util.startBackgroundJob(this, null, "Cutting image",

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import se.tdp025.Rangi.R;
 import se.tdp025.Rangi.analyze.CropImage.CropImage;
 
 /**
@@ -16,6 +17,7 @@ public class BrowseGallery extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.gallery);
 
         Intent intent = new Intent();
         intent.setType("image/*");

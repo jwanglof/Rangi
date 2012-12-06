@@ -54,9 +54,9 @@ public class LoginScreen extends Activity {
                  * Checks CONFIG_USER_LOGIN in SharedPreferences
                  */
                 if (user_login) {
-                    finish();
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
                     startActivity(gotoMainMenu);
+                    finish();
                 }
                 else {
                     url = new URL(Data.SERVER_ADDRESS + "login");
@@ -92,7 +92,6 @@ public class LoginScreen extends Activity {
                      * Log in successfull
                      */
                     if (inputJson.getBoolean("success")) {
-                        finish();
                         /*
                         * User session IN APP
                         * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
@@ -100,6 +99,7 @@ public class LoginScreen extends Activity {
                         */
                         SharedPreferences.Editor editor = userSettings.edit();
                         editor.putBoolean("CONFIG_USER_LOGIN", true);
+                        editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
                         editor.commit();
 
                         Toast.makeText(LoginScreen.this, "Login successfull", Toast.LENGTH_SHORT).show();
@@ -112,10 +112,6 @@ public class LoginScreen extends Activity {
                         handler.postDelayed(new Runnable() {
 
                             public void run() {
-                                // make sure we close the login screen so the user won't come back when it presses back key
-                                // Not sure about this either. Do we need to close this?
-                                finish();
-
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
                                 startActivity(gotoMainMenu);
@@ -123,6 +119,9 @@ public class LoginScreen extends Activity {
 
                         }, 1500); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
 
+                        // make sure we close the login screen so the user won't come back when it presses back key
+                        // Not sure about this either. Do we need to close this?
+                        finish();
                     }
                     /*
                      * Log in unsuccessfull

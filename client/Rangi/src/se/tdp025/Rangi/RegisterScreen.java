@@ -80,6 +80,8 @@ public class RegisterScreen extends Activity {
                 inputJson = new org.json.JSONObject(result);
 
                 if (inputJson.getBoolean("success")) {
+                    finish(); // Not sure if this works??
+
                     Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
                     /*
@@ -90,6 +92,7 @@ public class RegisterScreen extends Activity {
                     SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                     boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                     SharedPreferences.Editor editor = userSettings.edit();
+                    editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
                     editor.putBoolean("CONFIG_USER_LOGIN", true);
                     editor.commit();
 

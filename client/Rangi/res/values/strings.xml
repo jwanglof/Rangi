@@ -24,7 +24,7 @@
     <!-- Settings strings -->
     <string name="color_options">Color options</string>
     <string name="num_of_colors">Colors</string>
-    <string name="num_of_colors_summary">Set the number of colors to get from an image</string>
+    <string name="num_of_colors_summary">Number of colors to get from an image</string>
 
     <!-- Login -->
     <string name="username">Username</string>

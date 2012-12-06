@@ -23,10 +23,8 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.ViewConfiguration;
+import android.view.*;
+import se.tdp025.Rangi.R;
 
 import java.util.ArrayList;
 
@@ -40,11 +38,16 @@ public class CropImageView extends ImageViewTouchBase {
 
     /* NEW */
     protected ScaleGestureDetector mScaleDetector;
-    protected ScaleGestureDetector mScaleCropDetector;
+    protected ScaleGestureDetector mHighlightScaleDetector;
+
     protected GestureDetector mGestureDetector;
     protected GestureDetector.OnGestureListener mGestureListener;
+
+    protected GestureDetector mHighlightGestureDetector;
+    protected GestureDetector.OnGestureListener mHighlightGestureListener;
+
     protected ScaleGestureDetector.OnScaleGestureListener mScaleListener;
-    protected ScaleGestureDetector.OnScaleGestureListener mCropScaleListener;
+    protected ScaleGestureDetector.OnScaleGestureListener mHighlightScaleListener;
     protected int mTouchSlop;
     protected boolean mDoubleTapEnabled = true;
     protected boolean mScaleEnabled = true;
@@ -55,6 +58,8 @@ public class CropImageView extends ImageViewTouchBase {
     private Context mContext;
 
     private OnImageViewTouchDoubleTapListener mDoubleTapListener;
+
+    private boolean highlightTouch = false;
 
 
     /* NEW */
@@ -68,15 +73,19 @@ public class CropImageView extends ImageViewTouchBase {
     protected void init() {
         super.init();
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+
         mGestureListener = new GestureListener();
+        mHighlightGestureListener = new HighlightGestureListener();
+
         mScaleListener = new ScaleListener();
-        mCropScaleListener = new ScaleCropListener();
+        mHighlightScaleListener = new HighlightScaleListener();
 
 
         mScaleDetector = new ScaleGestureDetector( getContext(), mScaleListener );
-        mScaleCropDetector = new ScaleGestureDetector(getContext(), mCropScaleListener);
+        mHighlightScaleDetector = new ScaleGestureDetector(getContext(), mHighlightScaleListener);
 
         mGestureDetector = new GestureDetector( getContext(), mGestureListener, null, true );
+        mHighlightGestureDetector = new GestureDetector( getContext(), mHighlightGestureListener, null, true);
 
         mCurrentScaleFactor = 1f;
         mDoubleTapDirection = 1;
@@ -168,101 +177,44 @@ public class CropImageView extends ImageViewTouchBase {
             return false;
         }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (cropImage.mWaitingToPick) {
-                    recomputeFocus(event);
-                } else {
-                    Log.v(TAG, "Touch!");
-
-                    for (int i = 0; i < mHighlightViews.size(); i++) {
-                        HighlightView hv = mHighlightViews.get(i);
-                        int edge = hv.getHit(event.getX(), event.getY());
-                        if (edge != HighlightView.GROW_NONE) {
-
-                            mMotionEdge = edge;
-                            mMotionHighlightView = hv;
-                            mLastX = event.getX();
-                            mLastY = event.getY();
-                            mMotionHighlightView.setMode(
-                                    (edge == HighlightView.MOVE)
-                                            ? HighlightView.ModifyMode.Move
-                                            : HighlightView.ModifyMode.Grow);
-                            break;
-                        }
-                    }
-
+        for (int i = 0; i < mHighlightViews.size(); i++) {
+            HighlightView hv = mHighlightViews.get(i);
+            int edge = hv.getHit(event.getX(), event.getY());
+            if (edge != HighlightView.GROW_NONE) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        highlightTouch = true;
+                        mLastX = event.getX();
+                        mLastY = event.getY();
+                        mMotionEdge = edge;
                 }
-                break;
-            case MotionEvent.ACTION_UP:
+                mMotionHighlightView = hv;
 
-                if (cropImage.mWaitingToPick) {
-                    for (int i = 0; i < mHighlightViews.size(); i++) {
-                        HighlightView hv = mHighlightViews.get(i);
-                        if (hv.hasFocus()) {
-                            cropImage.mCrop = hv;
-                            for (int j = 0; j < mHighlightViews.size(); j++) {
-                                if (j == i) {
-                                    continue;
-                                }
-                                mHighlightViews.get(j).setHidden(true);
-                            }
-                            centerBasedOnHighlightView(hv);
-                            ((CropImage) mContext).mWaitingToPick = false;
-                            return true;
-                        }
-                    }
-                } else if (mMotionHighlightView != null) {
-                    centerBasedOnHighlightView(mMotionHighlightView);
+                break;
+            }
+        }
+
+        if(highlightTouch) {
+            mHighlightScaleDetector.onTouchEvent( event );
+
+            if ( !mHighlightScaleDetector.isInProgress() ) mHighlightGestureDetector.onTouchEvent( event );
+        }
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                highlightTouch = false;
+                if(mMotionHighlightView != null) {
                     mMotionHighlightView.setMode(
                             HighlightView.ModifyMode.None);
                 }
-                mMotionHighlightView = null;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (cropImage.mWaitingToPick) {
-                    recomputeFocus(event);
-                } else if (mMotionHighlightView != null) {
-                    setLongClickable(false);
-                    mMotionHighlightView.handleMotion(mMotionEdge,
-                            event.getX() - mLastX,
-                            event.getY() - mLastY);
-                    mLastX = event.getX();
-                    mLastY = event.getY();
-
-                    if (true) {
-                        // This section of code is optional. It has some user
-                        // benefit in that moving the crop rectangle against
-                        // the edge of the screen causes scrolling but it means
-                        // that the crop rectangle is no longer fixed under
-                        // the user's finger.
-                        ensureVisible(mMotionHighlightView);
-                    }
-                    return true;
-                }
-                break;
         }
 
 
-        mScaleDetector.onTouchEvent( event );
+        if(!highlightTouch) {
+            mScaleDetector.onTouchEvent( event );
 
-        if ( !mScaleDetector.isInProgress() ) mGestureDetector.onTouchEvent( event );
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-                // center(true, true);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                // if we're not zoomed then there's no point in even allowing
-                // the user to move the image around.  This call to center puts
-                // it back to the normalized location (with false meaning don't
-                // animate).
-                if (getScale() == 1F) {
-                    //center(true, true);
-                }
-                break;
+            if ( !mScaleDetector.isInProgress() ) mGestureDetector.onTouchEvent( event );
         }
-
         setLongClickable(true);
         return true;
     }
@@ -360,7 +312,7 @@ public class CropImageView extends ImageViewTouchBase {
     private void onLongPressed(MotionEvent e) {
         Log.v(TAG, "LongPressed");
         Activity activity = (Activity)mContext;
-        activity.openOptionsMenu();
+        activity.findViewById(R.id.crop_menu).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -439,6 +391,47 @@ public class CropImageView extends ImageViewTouchBase {
         }
     }
 
+    public class HighlightGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return CropImageView.this.onHighlightScroll(e1, e2, distanceX, distanceY);
+        }
+
+        @Override
+        public void onLongPress( MotionEvent e ) {
+            Log.v(TAG, "onLongPress");
+            if ( isLongClickable() ) {
+                if ( !mScaleDetector.isInProgress() ) {
+                    setPressed( true );
+                    performLongClick();
+                    CropImageView.this.onLongPressed(e);
+                }
+            }
+        }
+
+    }
+    private boolean onHighlightScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        if (mMotionEdge != HighlightView.MOVE) {
+
+            mMotionHighlightView.setMode(HighlightView.ModifyMode.Grow);
+            mMotionHighlightView.handleMotion(mMotionEdge,
+                    e2.getX() - mLastX,
+                    e2.getY() - mLastY);
+            mLastX = e2.getX();
+            mLastY = e2.getY();
+            ensureVisible(mMotionHighlightView);
+        }
+        else {
+            mMotionHighlightView.handleMotion(HighlightView.MOVE,
+                    e2.getX() - mLastX,
+                    e2.getY() - mLastY);
+            mLastX = e2.getX();
+            mLastY = e2.getY();
+            ensureVisible(mMotionHighlightView);
+        }
+        return true;
+    }
 
 
     public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -446,29 +439,31 @@ public class CropImageView extends ImageViewTouchBase {
         @SuppressWarnings("unused")
         @Override
         public boolean onScale( ScaleGestureDetector detector ) {
-            Log.d( TAG, "onScale" );
-            float span = detector.getCurrentSpan() - detector.getPreviousSpan();
-            float targetScale = mCurrentScaleFactor * detector.getScaleFactor();
-            if ( mScaleEnabled ) {
-                targetScale = Math.min( getMaxZoom(), Math.max( targetScale, getMinZoom()-0.1f ) );
-                zoomTo( targetScale, detector.getFocusX(), detector.getFocusY() );
-                mCurrentScaleFactor = Math.min( getMaxZoom(), Math.max( targetScale, getMinZoom()-1.0f ) );
-                mDoubleTapDirection = 1;
-                invalidate();
-                return true;
-            }
-            return false;
+            return onGeneralScale(detector);
         }
     }
 
-    public class ScaleCropListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    public class HighlightScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @SuppressWarnings("unused")
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
-            Log.v(TAG, "Zoooooooom!");
-            return false;
+            return onGeneralScale(detector);
         }
+    }
+
+    private boolean onGeneralScale(ScaleGestureDetector detector) {
+        Log.d( TAG, "onScale" );
+        float span = detector.getCurrentSpan() - detector.getPreviousSpan();
+        float targetScale = mCurrentScaleFactor * detector.getScaleFactor();
+        if ( mScaleEnabled ) {
+            targetScale = Math.min( getMaxZoom(), Math.max( targetScale, getMinZoom()-0.1f ) );
+            zoomTo( targetScale, detector.getFocusX(), detector.getFocusY() );
+            mCurrentScaleFactor = Math.min( getMaxZoom(), Math.max( targetScale, getMinZoom()-1.0f ) );
+            mDoubleTapDirection = 1;
+            invalidate();
+            return true;
+        }
+        return false;
     }
 
     public interface OnImageViewTouchDoubleTapListener {

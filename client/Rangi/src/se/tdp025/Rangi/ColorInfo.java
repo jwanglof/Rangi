@@ -1,10 +1,14 @@
 package se.tdp025.Rangi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.ClipboardManager;
@@ -14,11 +18,13 @@ import android.view.View.OnLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import se.tdp025.Rangi.settings.Settings;
 
 public class ColorInfo extends Activity {
 	
 	private static final String TAG = "Rangi_ColorInfo";
 	private Context context;
+    private int colorCode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,20 +33,25 @@ public class ColorInfo extends Activity {
         context = this;
         //Get the chosen color
         Intent intent = getIntent();
-    	int color = intent.getIntExtra("color-code", 0);
+        colorCode = intent.getIntExtra("color-code", 0);
+        boolean showSave = intent.getBooleanExtra("show-save", false);
+        findViewById(R.id.save_color_button).setVisibility(showSave ? View.VISIBLE : View.INVISIBLE);
+        if(showSave)
+            checkIfColorExist();
+
         
-        Log.d(TAG, "Chosen color code:" + color);
+        Log.d(TAG, "Chosen color code:" + colorCode);
   
         //Set titleBar to chosen color
         LinearLayout titleBar = (LinearLayout) findViewById(R.id.ColorInfo_titleBar);
-        titleBar.setBackgroundColor(color);
+        titleBar.setBackgroundColor(colorCode);
         
     	//Color format
         //TextView colorView = (TextView) findViewById(R.id.color_data);
     	//colorView.setText(Integer.toString(color));
     	
     	//Hex format
-    	String hex = String.format("#%06X", (0xFFFFFF & color));
+    	String hex = String.format("#%06X", (0xFFFFFF & colorCode));
     	final TextView hexView = (TextView) findViewById(R.id.hex_data);
     	hexView.setText(hex);
     	
@@ -59,7 +70,7 @@ public class ColorInfo extends Activity {
 
     	//HSV format
     	float[] hsv = new float[3];
-    	Color.colorToHSV(color, hsv);
+    	Color.colorToHSV(colorCode, hsv);
     	
     	StringBuilder sbHSV = new StringBuilder();
     	sbHSV.append(Math.round(hsv[0]) + "\u00B0, ");
@@ -83,9 +94,9 @@ public class ColorInfo extends Activity {
     	});
     	
     	//RGB format
-    	int red = (color >> 16) & 0xFF;
-    	int green = (color >> 8) & 0xFF;
-    	int blue = (color >> 0) & 0xFF;
+    	int red = (colorCode >> 16) & 0xFF;
+    	int green = (colorCode >> 8) & 0xFF;
+    	int blue = (colorCode >> 0) & 0xFF;
     	ArrayList<Integer> rgb = new ArrayList<Integer>();
     	rgb.add(red);
     	rgb.add(green);
@@ -119,4 +130,42 @@ public class ColorInfo extends Activity {
 			}    		    		
     	});
 	}
+
+    private void checkIfColorExist() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public void saveColor(View view) {
+        // Save
+        Toast.makeText(context, "Saved", Toast.LENGTH_LONG).show();
+        findViewById(R.id.save_color_button).setVisibility(View.INVISIBLE);
+        saveColor(Data.SHARED_COLORS, colorCode);
+    }
+
+
+    public boolean saveColor(String arrayName, int color) {
+        SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        Integer[] colorArray = loadColors(arrayName, context);
+        ArrayList<Integer> colorList =  new ArrayList<Integer>(Arrays.asList(colorArray));
+        colorList.add(color);
+
+        colorArray = colorList.toArray(new Integer[colorList.size()]);
+
+        editor.putInt(arrayName +"_size", colorArray.length);
+        for(int i=0;i<colorArray.length;i++)
+            editor.putInt(arrayName + "_" + i, colorArray[i]);
+        return editor.commit();
+    }
+
+
+
+    public Integer[] loadColors(String name, Context mContext) {
+        SharedPreferences prefs = mContext.getSharedPreferences("RANGI", 0);
+        int size = prefs.getInt(name + "_size", 0);
+        Integer array[] = new Integer[size];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getInt(name + "_" + i, 0);
+        return array;
+    }
 }

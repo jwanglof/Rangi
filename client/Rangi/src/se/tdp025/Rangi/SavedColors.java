@@ -3,12 +3,14 @@ package se.tdp025.Rangi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import se.tdp025.Rangi.analyze.ColorAdapter;
+import se.tdp025.Rangi.settings.Settings;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,12 @@ public class SavedColors extends Activity {
         context = this;
 
         ArrayList<Integer> colorArray = new ArrayList<Integer>();
-        colorArray.add(-11507079);
+
+        SharedPreferences prefs = this.getSharedPreferences("RANGI", 0);
+        int size = prefs.getInt(Data.SHARED_COLORS + "_size", 0);
+        for(int i=0;i<size;i++)
+            colorArray.add(prefs.getInt(Data.SHARED_COLORS + "_" + i, 0));
+        /*colorArray.add(-11507079);
         colorArray.add(-287386);
         colorArray.add(-2713499);
         colorArray.add(-9851);
@@ -45,7 +52,7 @@ public class SavedColors extends Activity {
         colorArray.add(-141947);
         colorArray.add(-5538728);
         colorArray.add(-1);         // White
-        colorArray.add(-16777216);  // Black
+        colorArray.add(-16777216);  // Black    */
 
         ListView listView = (ListView)findViewById(R.id.list);
         colorAdapter = new ColorAdapter(this, colorArray);

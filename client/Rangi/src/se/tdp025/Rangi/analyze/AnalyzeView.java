@@ -3,6 +3,7 @@ package se.tdp025.Rangi.analyze;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.jabistudio.androidjhlabs.filter.BlockFilter;
 import com.jabistudio.androidjhlabs.filter.util.AndroidUtils;
+import se.tdp025.Rangi.ColorInfo;
 import se.tdp025.Rangi.R;
 import se.tdp025.Rangi.settings.Settings;
 
@@ -27,8 +29,6 @@ public class AnalyzeView extends Activity {
     private ColorAdapter colorAdapter;
     private int[] colors;
     private Context context;
-
-    private ImageView imageView;
     private Bitmap image;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,6 @@ public class AnalyzeView extends Activity {
 
         setContentView(R.layout.result_view);
 
-        imageView = (ImageView) findViewById(R.id.testingImageView);
         image = BitmapFactory.decodeByteArray(
                 getIntent().getByteArrayExtra("image-byteArray"), 0, getIntent().getByteArrayExtra("image-byteArray").length);
 
@@ -57,62 +56,12 @@ public class AnalyzeView extends Activity {
                 int blockSizeW = width;
                 int blockSizeH = height;
 
-                // 2, 4, 6, 9
-                if(height > width) {
-                    if(block % 10 == 0) {
-                        blockSizeW = width / (block / 5);
-                        blockSizeH = height / (block / 2);
-                    }
-                    else if(block % 9 == 0) {
-                        blockSizeW = width / (block / 3);
-                        blockSizeH = height / (block / 3);
-                    }
-                    else if(block % 6 == 0) {
-                        blockSizeW = width / (block / 3);
-                        blockSizeH = height / (block / 2);
-                    }
-                    else if(block % 4 == 0 && block != 4) {
-                        blockSizeW = width / (block / 4);
-                        blockSizeH = height / (block / 2);
-                    }
-                    else if(block % 2 == 0) {
-                        blockSizeW = width / (block / 2);
-                        blockSizeH = height / (block / 2);
-                    }
-                    else {
-                        if(height > width)
-                            blockSizeW = width / block;
-                        else
-                            blockSizeH = height / block;
-                    }
+                if(block % 2 == 0) {
+                    blockSizeW = width / 2;
+                    blockSizeH = height / (block / 2);
                 }
-                else {
-                    if(block % 10 == 0) {
-                        blockSizeW = width / (block / 2);
-                        blockSizeH = height / (block / 5);
-                    }
-                    else if(block % 9 == 0) {
-                        blockSizeW = width / (block / 3);
-                        blockSizeH = height / (block / 3);
-                    }
-                    else if(block % 6 == 0) {
-                        blockSizeW = width / (block / 2);
-                        blockSizeH = height / (block / 3);
-                    }
-                    else if(block % 4 == 0 && block != 4) {
-                        blockSizeW = width / (block / 2);
-                        blockSizeH = height / (block / 4);
-                    }
-                    else if(block % 2 == 0) {
-                        blockSizeW = width / (block / 2);
-                        blockSizeH = height / (block / 2);
-                    }
-                    else {
-                        if(height > width)
-                            blockSizeW = width / block;
-                        else
-                            blockSizeH = height / block;
-                    }
+                else  {
+                    blockSizeW = width / block;
                 }
 
                 filter.setBlockSize(blockSizeH, blockSizeW);
@@ -132,26 +81,16 @@ public class AnalyzeView extends Activity {
                     int y = 0;
                     for(int j = 0; j < height / blockSizeH; j++) {
                         int tempY = y + (blockSizeH / 2);
-                        Log.v(TAG, "COLOR CODE: " + image.getPixel(tempX, tempY));
                         colorArray.add(image.getPixel(tempX, tempY));
                         y += blockSizeH;
                     }
                     x += blockSizeW;
                 }
 
-
-                Log.v(TAG, "Height: " + height);
-                Log.v(TAG, "Width: " + width);
-                Log.v(TAG, "BlockSizeH: " + blockSizeH);
-                Log.v(TAG, "BlockSizeW: " + blockSizeW);
-
-                Log.d(TAG, "AnalyzeView-Colors: " + colors.length);
-
                 final ArrayList<Integer> colorArrayF = colorArray;
                 AnalyzeView.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        imageView.setImageBitmap(image);
                         populateView(colorArrayF);
                         dialog.dismiss();
                     }
@@ -179,8 +118,10 @@ public class AnalyzeView extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG, "Color of adapter:" + colorAdapter.getItem(i));
-                Toast.makeText(context,"Color code: " + colorAdapter.getItem(i), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ColorInfo.class);
+                intent.putExtra("color-code", Integer.parseInt(colorAdapter.getItem(i).toString()));
+                intent.putExtra("show-save", true);
+                startActivity(intent);
             }
         });
 

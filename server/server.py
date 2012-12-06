@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, abort, jsonify, session
+from flask import request, abort, jsonify, session, render_template
 import database as db
 import os
 
@@ -7,6 +7,14 @@ import utils
 
 app = Flask(__name__)
 app.secret_key = b'\xdc\xf3\xa0\\\xd9\xc8\xa8o87\x19\xc2\xdf\x88\x8f\xbf"-\x0f\x15\xe9l4l'
+
+# ==================== API ==================== 
+
+@app.route("/", methods = ["GET"])
+def index():
+	return render_template('index.html')
+
+# ==================== API ==================== 
 
 @app.route("/register", methods = ["POST"])
 def register():

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  >
     <PreferenceCategory
             android:title="@string/color_options">
+
         <se.tdp025.Rangi.settings.SeekBarPreference
                 android:key="number_of_colors"
                 android:title="@string/num_of_colors"
                 android:summary="@string/num_of_colors_summary"
-                android:defaultValue="4"
-                android:max="10"/>
+                android:defaultValue="6"
+                android:max="25"
+                />
     </PreferenceCategory>
-
 </PreferenceScreen>

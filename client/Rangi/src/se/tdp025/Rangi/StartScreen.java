@@ -4,12 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class StartScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startscreen);
     }
+
+    /*public void onResume()
+    {
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+    } */
+
+
 
     public void login(View view) {
         Intent login = new Intent(this, LoginScreen.class);

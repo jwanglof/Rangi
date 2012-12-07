@@ -46,6 +46,10 @@ public class LoginScreen extends Activity {
              * Do we need this in Register too?
              */
             try {
+                // make sure we close the login screen so the user won't come back when it presses back key
+                // Not sure about this either. Do we need to close this?  Or can this be done in StartScreen in some way?
+                finish();
+
                 SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                 boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
 
@@ -55,8 +59,9 @@ public class LoginScreen extends Activity {
                  */
                 if (user_login) {
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
+                    gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    gotoMainMenu.putExtra("EXIT", true);
                     startActivity(gotoMainMenu);
-                    finish();
                 }
                 else {
                     url = new URL(Data.SERVER_ADDRESS + "login");
@@ -114,14 +119,14 @@ public class LoginScreen extends Activity {
                             public void run() {
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
+                                gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                gotoMainMenu.putExtra("EXIT", true);
                                 startActivity(gotoMainMenu);
                             }
 
                         }, 1500); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
 
-                        // make sure we close the login screen so the user won't come back when it presses back key
-                        // Not sure about this either. Do we need to close this?
-                        finish();
+
                     }
                     /*
                      * Log in unsuccessfull
@@ -133,7 +138,7 @@ public class LoginScreen extends Activity {
 
             }
             catch (Exception e) {
-                System.out.println(e);
+                Toast.makeText(LoginScreen.this, "Could not connect to the server. Please try again!", Toast.LENGTH_SHORT).show();
             }
 
         }

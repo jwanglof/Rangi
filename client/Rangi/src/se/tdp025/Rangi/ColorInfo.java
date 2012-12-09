@@ -137,6 +137,9 @@ public class ColorInfo extends Activity {
         });
     }
 
+    /***
+     * Check if color exist in the current context
+     */
     private boolean checkIfColorExist() {
         String name = JSON.checkIfColorExist(colorCode, context);
         if(name != null)
@@ -153,11 +156,17 @@ public class ColorInfo extends Activity {
         checkIfColorExist();
     }
 
+    /***
+     * Save color, called when the Saved Button is clicked
+     */
     public void saveColor(View view) {
         // Show save dialog
         showDialog(SAVE_DIALOG);
     }
 
+    /***
+     * Delete color, called when the Delete Button is clicked
+     */
     public void deleteColor(View view)  {
         showDialog(DELETE_DIALOG);
     }
@@ -182,8 +191,11 @@ public class ColorInfo extends Activity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(context, "Saved", Toast.LENGTH_LONG).show();
+                        // Hide save button
                         findViewById(R.id.save_color_button).setVisibility(View.GONE);
+                        // Save color
                         saveColor(input.getText().toString(), colorCode);
+                        // Display delete button and color name
                         showHiddenContent();
                     }
                 });
@@ -205,7 +217,9 @@ public class ColorInfo extends Activity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show();
+                        // Delete color
                         deleteColor(colorCode);
+                        // Exit activity
                         finish();
                     }
                 });
@@ -222,10 +236,16 @@ public class ColorInfo extends Activity {
         return super.onCreateDialog(id);
     }
 
+    /***
+     * Delete color, JSON
+     */
     private void deleteColor(int color) {
         JSON.deleteFromJSON(color, context);
     }
 
+    /***
+     * Save color, JSON
+     */
     public void saveColor(String name, int color) {
         if(name.length() < 1)
             name = "Undefined";

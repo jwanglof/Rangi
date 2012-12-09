@@ -21,14 +21,13 @@ public class Camera extends Activity {
     private static final String TAG = "Rangi_Camera";
 
 
-    /**
+    /***
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "Start Camera");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         fileUri = getOutputMediaFileUri();
@@ -39,8 +38,6 @@ public class Camera extends Activity {
     }
 
     public void onDestroy() {
-
-        Log.wtf(TAG, "Camera Destroyed???");
         super.onDestroy();
     }
 
@@ -72,7 +69,9 @@ public class Camera extends Activity {
         return Uri.fromFile(getOutputMediaFile());
     }
 
-    /** Create a File for saving an image or video */
+    /***
+     *  Create a File for saving an image or video
+     */
     private static File getOutputMediaFile(){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.

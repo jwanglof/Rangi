@@ -24,6 +24,10 @@ public class JSON {
 
     private static final String TAG = "Rangi_JSON";
 
+
+    /***
+     * Parse a string to a JSONObject
+     */
     public static JSONObject parse(String json)
     {
         try {
@@ -37,15 +41,22 @@ public class JSON {
         return null;
     }
 
+    /***
+     * Parse a JSON from a URL
+     */
     public static JSONObject parseFromURL(URL url)
     {
 
         return null;
     }
 
+    /***
+     * Check if the color exist in the saved JSON
+     */
     public static String checkIfColorExist(int color, Context context)
     {
         SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
+        // Get JSON string from SharedPreferences
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);
         try {
@@ -65,9 +76,13 @@ public class JSON {
         return null;
     }
 
+    /***
+     * Save a new color the saved JSON object
+     */
     public static boolean saveToJson(String name, int color, Context context) {
         SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
         SharedPreferences.Editor editor = prefs.edit();
+        // Get JSON string from SharedPreferences
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);
         try {
@@ -82,6 +97,7 @@ public class JSON {
                 }
             }
 
+            // The new color, here we can add the hex etc.
             JSONObject newColor = new JSONObject();
             newColor.put("name", name);
             newColor.put("android-color", color);
@@ -99,10 +115,16 @@ public class JSON {
         return false;
     }
 
+    /***
+     * JSONObject to a string
+     */
     public static String jsonToString(JSONObject jsonObject) {
        return jsonObject.toString();
     }
 
+    /***
+     * Delete color from the stored JSON
+     */
     public static void deleteFromJSON(int color, Context context) {
         SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
         SharedPreferences.Editor editor = prefs.edit();

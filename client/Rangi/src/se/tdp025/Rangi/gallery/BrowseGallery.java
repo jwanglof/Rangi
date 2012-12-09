@@ -27,7 +27,10 @@ public class BrowseGallery extends Activity {
                 "Select Picture"), SELECT_PICTURE);
     }
 
-    //UPDATED
+    /***
+     *  onActivityResult
+     *  Start the CropImage activity
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {

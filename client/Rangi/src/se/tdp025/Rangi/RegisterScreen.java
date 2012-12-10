@@ -37,7 +37,7 @@ public class RegisterScreen extends Activity {
     /**
      * Called when the activity is first created.
      */
-    @Override
+    //@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registerscreen);
@@ -88,15 +88,16 @@ public class RegisterScreen extends Activity {
                     inputJson = new org.json.JSONObject(result);
 
                     if (inputJson.getBoolean("success")) {
-                        finish(); // Not sure if this works??
+                        // Make sure that the user can't go back to RegisterScreen
+                        finish();
 
                         Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-                    /*
-                     * User session IN APP
-                     * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
-                     * This will be saved in the app so the user won't have to sign in every time the app is opened
-                     */
+                        /*
+                        * User session IN APP
+                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
+                        * This will be saved in the app so the user won't have to sign in every time the app is opened
+                        */
                         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                         SharedPreferences.Editor editor = userSettings.edit();
@@ -111,6 +112,7 @@ public class RegisterScreen extends Activity {
                             public void run() {
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(RegisterScreen.this, MainMenu.class);
+                                //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(gotoMainMenu);
                             }
 

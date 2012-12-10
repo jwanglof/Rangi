@@ -15,6 +15,13 @@ public class MainMenu extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainmenu);
+
+        /*
+         * Pretty sure this isn't necessary
+         * This should be done with flags BEFORE the user get access to MainMenu!
+         */
+        SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
+        boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
     }
 
     public void camera(View view) {
@@ -51,7 +58,7 @@ public class MainMenu extends Activity {
         editor.putString("CONFIG_USER_USERNAME", "");
         editor.commit();
 
-        // Go to login screen!!
+        // Go to start screen
         Intent ss = new Intent(this, StartScreen.class);
         startActivity(ss);
     }

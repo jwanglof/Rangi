@@ -120,6 +120,10 @@ public class RegisterScreen extends Activity {
                     }
                     else {
                         Toast.makeText(RegisterScreen.this, inputJson.get("error").toString(), Toast.LENGTH_SHORT).show();
+
+                        // Let the user view the register screen again instead of jumping back to StartScreen
+                        Intent registerScreen = new Intent(RegisterScreen.this, RegisterScreen.class);
+                        startActivity(registerScreen);
                     }
 
                 }

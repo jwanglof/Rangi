@@ -42,4 +42,11 @@
     <!-- DUMP -->
     <string name="mainmenu_button">Jump to MainMenu</string>
     <string name="logout_button">Logout</string>
+    <string name="num_of_saved">Max colors</string>
+    <string name="num_of_saved_summary">Max number of colors that can be saved</string>
+    <string name="server_options">Server Options</string>
+    <string name="sync_server">Sync data</string>
+    <string name="sync_server_summary">Sync data with server (Colors)</string>
+    <string name="delete_color">Delete Color</string>
+    <string name="no_colors_saved">No colors saved</string>
 </resources>

@@ -12,5 +12,23 @@
                 android:defaultValue="6"
                 android:max="25"
                 />
+
+        <se.tdp025.Rangi.settings.SeekBarPreference
+                android:key="number_of_saved"
+                android:title="@string/num_of_saved"
+                android:summary="@string/num_of_saved_summary"
+                android:defaultValue="5"
+                android:max="25"
+                />
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/server_options">
+
+           <CheckBoxPreference
+               android:key="sync_server"
+               android:title="@string/sync_server"
+               android:summary="@string/sync_server_summary"
+               android:checked="true"
+               />
     </PreferenceCategory>
 </PreferenceScreen>

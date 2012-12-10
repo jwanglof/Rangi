@@ -125,9 +125,13 @@ public class CropImage extends MonitoredActivity {
         startFaceDetection();
     }
 
+    /***
+     * Show custom menu
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            // If hidden, set visible
             if ( menuView.getVisibility() == View.GONE )
                 menuView.setVisibility(View.VISIBLE);
             else
@@ -145,15 +149,20 @@ public class CropImage extends MonitoredActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    /***
+     * Square Tool
+     */
     public void squareTool(View view) {
+        // Unfocus the circle button and set it to be enable
         menuView.findViewById(R.id.circle_button).setBackgroundResource(R.drawable.circle_button_unfocus);
         menuView.findViewById(R.id.circle_button).setEnabled(true);
+        // Foucs the square button adn set it to be disable
         menuView.findViewById(R.id.rectangle_button).setBackgroundResource(R.drawable.rectangle_button);
         menuView.findViewById(R.id.rectangle_button).setEnabled(false);
 
         menuView.setVisibility(View.GONE);
 
-        Log.d(TAG, "squareTool function.");
+        // Reset view
         mCircleCrop = false;
         mAspectX = 0;
         mAspectY = 0;
@@ -162,15 +171,20 @@ public class CropImage extends MonitoredActivity {
         startFaceDetection();
     }
 
+    /***
+     * Circle Tool
+     */
     public void circleTool(View view) {
+        // Focus the circle button and set it to be enable
         menuView.findViewById(R.id.circle_button).setBackgroundResource(R.drawable.circle_button);
         menuView.findViewById(R.id.circle_button).setEnabled(false);
+        // Unfoucs the square button adn set it to be disable
         menuView.findViewById(R.id.rectangle_button).setBackgroundResource(R.drawable.rectangle_button_unfocus);
         menuView.findViewById(R.id.rectangle_button).setEnabled(true);
 
         menuView.setVisibility(View.GONE);
 
-        Log.d(TAG, "circleTool function.");
+        // Reset view
         mCircleCrop = true;
         mAspectX = 1;
         mAspectY = 1;
@@ -178,19 +192,18 @@ public class CropImage extends MonitoredActivity {
         startFaceDetection();
     }
 
+    /***
+     * Analyze
+     */
     public void analyze(View view) {
-        Log.d(TAG, "analyze function.");
         Bitmap croppedImage = onSaveClicked();
-        Log.v(TAG, "analyze - Height: " + croppedImage.getHeight());
-        Log.v(TAG, "analyze - Width: " + croppedImage.getWidth());
-
 
         mSaving = false;
         if(croppedImage != null) {
             menuView.setVisibility(View.GONE);
             final Bitmap b = croppedImage;
             final Intent analyze = new Intent(this, AnalyzeView.class);
-            Util.startBackgroundJob(this, null, "Cutting image",
+            Util.startBackgroundJob(this, null, "Analyze image",
                     new Runnable() {
                         public void run() {
                             //saveOutput(analyze, b);

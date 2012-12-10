@@ -38,7 +38,7 @@ public class MainMenu extends Activity {
         startActivity(gallery); */
     }
     public void settings(View view) {
-        Toast.makeText(this, "Settings button", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Settings button", Toast.LENGTH_LONG).show();
         Intent settings = new Intent(this, Settings.class);
         startActivity(settings);
     }

@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import se.tdp025.Rangi.analyze.ColorAdapter;
+import se.tdp025.Rangi.json.JSON;
 import se.tdp025.Rangi.settings.Settings;
 
 import java.util.ArrayList;
@@ -24,13 +28,10 @@ public class SavedColors extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.saved_colors);
-
         context = this;
 
-        ArrayList<Integer> colorArray = new ArrayList<Integer>();
 
-        SharedPreferences prefs = this.getSharedPreferences("RANGI", 0);
-        int size = prefs.getInt(Data.SHARED_COLORS + "_size", 0);
+        /*int size = prefs.getInt(Data.SHARED_COLORS + "_size", 0);
         for(int i=0;i<size;i++)
             colorArray.add(prefs.getInt(Data.SHARED_COLORS + "_" + i, 0));
         /*colorArray.add(-11507079);
@@ -54,6 +55,28 @@ public class SavedColors extends Activity {
         colorArray.add(-1);         // White
         colorArray.add(-16777216);  // Black    */
 
+
+
+    }
+
+    public void onResume(){
+        ArrayList<Integer> colorArray = new ArrayList<Integer>();
+
+        SharedPreferences prefs = this.getSharedPreferences("RANGI", 0);
+
+        String result = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
+        Log.e(TAG, "RES: " + result);
+        JSONObject jsonObject = JSON.parse(result);
+        try {
+            JSONArray array = jsonObject.getJSONArray("colors");
+            for(int i = 0; i < array.length(); i++){
+                colorArray.add(array.getJSONObject(i).getInt("android-color"));
+            }
+
+
+        } catch (JSONException e) {
+            finish();
+        }
         ListView listView = (ListView)findViewById(R.id.list);
         colorAdapter = new ColorAdapter(this, colorArray);
         listView.setAdapter(colorAdapter);
@@ -68,5 +91,10 @@ public class SavedColors extends Activity {
                 SavedColors.this.startActivity(intent);
             }
         });
+
+        if(colorArray.isEmpty()) {
+            findViewById(R.id.no_colors_text).setVisibility(View.VISIBLE);
+        }
+        super.onResume();
     }
 }

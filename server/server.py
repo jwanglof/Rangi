@@ -49,7 +49,7 @@ def register():
 			"error": "Invalid fields."
 		})
 	
-	username = request.form["username"]
+	username = request.form["username"].lower()
 	password = request.form["password"]
 	password_repeat = request.form["password_repeat"]
 	email = request.form["email"]
@@ -80,7 +80,7 @@ def register():
 
 @app.route("/login", methods = ["POST"])
 def login():
-	username = request.form["username"].strip()
+	username = request.form["username"].strip().lower()
 	password = request.form["password"].strip()
 	user = db.validate_credentials(username, password)	
 

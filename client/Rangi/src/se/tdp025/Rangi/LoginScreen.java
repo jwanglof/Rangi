@@ -119,8 +119,8 @@ public class LoginScreen extends Activity {
                             public void run() {
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
-                                gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                gotoMainMenu.putExtra("EXIT", true);
+                                //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                //gotoMainMenu.putExtra("EXIT", true);
                                 startActivity(gotoMainMenu);
                             }
 

@@ -23,6 +23,7 @@ public class StartScreen extends Activity {
 
     public void login(View view) {
         Intent login = new Intent(this, LoginScreen.class);
+        //login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(login);
     }
 
@@ -33,6 +34,7 @@ public class StartScreen extends Activity {
 
     public void mainmenu(View view) {
         Intent mainmenu = new Intent(this, MainMenu.class);
+        //mainmenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(mainmenu);
     }
 }

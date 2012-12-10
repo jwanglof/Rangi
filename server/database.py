@@ -1,6 +1,8 @@
 import pymongo
 import utils
 
+from bson.objectid import ObjectId
+
 db = pymongo.Connection().rangi
 
 def save_user(user):
@@ -28,6 +30,14 @@ def add_color(user, color):
 	if not user: return False
 	if not color: return False
 
+	color["_id"] = str(ObjectId())
 	db.users.update(user, {"$push": {"colors": color}})
 
 	return True
+
+def update_color_name(user_id, color_id, new_name):
+	query = {"_id": user_id, "colors._id": color_id}
+	updated_doc = {"$set": {"colors.$.name": new_name}}
+	db.users.update(query, updated_doc)
+
+	# TODO: Error handling

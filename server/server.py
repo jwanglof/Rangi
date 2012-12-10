@@ -142,6 +142,17 @@ def poll_queue():
 	print {"success": True, "colors": colors}
 	return response
 
+@app.route("/update", methods = ["POST"])
+def update_color():
+	if not logged_in():
+		return failed()
+
+	color_id = request.form["color_id"]
+	new_name = request.form["name"]
+	db.update_color_name(session["id"], color_id, new_name)
+	
+	return succeeded()
+
 if __name__ == "__main__":
 	app.debug = True
-	app.run(threaded=True)
+	app.run(host="0.0.0.0", threaded=True)

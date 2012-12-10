@@ -22,6 +22,8 @@ public class MainMenu extends Activity {
          */
         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
+        if (!user_login)
+            finish();
     }
 
     public void camera(View view) {
@@ -51,6 +53,9 @@ public class MainMenu extends Activity {
     }
 
     public void logout(View view) {
+        // Make sure that the user can't access MainMenu after he signed off
+        finish();
+
         Toast.makeText(this, "You have signed off. Plz come back to us!", Toast.LENGTH_LONG).show();
         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
         SharedPreferences.Editor editor = userSettings.edit();

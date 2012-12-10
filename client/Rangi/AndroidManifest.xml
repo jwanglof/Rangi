@@ -12,7 +12,7 @@
         <activity android:name=".ColorInfo" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.LoginScreen" android:theme="@android:style/Theme.NoTitleBar"/>
         <!-- When the user access the MainMenu we can assume that he has signed in/registered and therefore clear the 'back-stack' -->
-        <activity android:name="se.tdp025.Rangi.MainMenu" android:launchMode="singleTop" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name="se.tdp025.Rangi.MainMenu" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.RegisterScreen" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.SavedColors" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.StartScreen"  android:theme="@android:style/Theme.NoTitleBar"/>

@@ -66,7 +66,11 @@ public class LoginScreen extends Activity {
                     startActivity(gotoMainMenu);
                 }
                 else {
-                    // Make sure that the user can't go back to LoginScreen
+                    /*
+                     * Make sure that the user can't go back to LoginScreen
+                     * STILL doesn't work!
+                     * The problem now is that when the user hits the Back-button he will go to MainMenu
+                     */
                     finish();
 
                     url = new URL(Data.SERVER_ADDRESS + "login");

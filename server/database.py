@@ -44,5 +44,5 @@ def update_color_name(user_id, color_id, new_name):
 
 def delete_color(user_id, color_id):
 	query = {"_id": user_id}
-	update = {"$pull": {"colors": {"_id": color_id}}}
+	update = {"$pop": {"colors": {"_id": color_id}}}
 	db.users.update(query, update)

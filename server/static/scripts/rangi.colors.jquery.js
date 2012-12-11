@@ -10,10 +10,10 @@ function create_color_element(color) {
 	box.find(".name").val(color["name"]);
 	box.find(".hex").text(color["hex"]);
 	if(color["hsv"] != undefined)
-		box.find(".hsv").text(color["hsv"]);
+		box.find(".hsv").html(color["hsv"]);
 
 	if(color["rgb"] != undefined)
-		box.find(".rgb").text(color["rgb"]);
+		box.find(".rgb").html(color["rgb"]);
 
 	box.find("img.delete").attr("data-color-id", color["_id"]);
 
@@ -62,11 +62,15 @@ function toggle_swatch(swatch) {
 function delete_color(color_id) {
 	if(color_id == undefined) return;
 
-	$.post("/delete", {"color_id": color_id}).success(function(response) {
-		$(".color_box[data-color-id='" + color_id + "']").fadeOut("fast", function() { $(this).remove(); });
-	}).error(function(response) {
-		console.log("Error");
+	$.post("/delete", {"color_id": color_id}, function(response) {
+		if(response.success) {
+			console.log("Deleted " + color_id);
+			$(".color_box[data-color-id='" + color_id + "']").fadeOut("fast", function() { $(this).remove(); });
+		} else {
+			console.log("Error when deleting " + color_id);
+		}
 	});
+	
 }
 
 $(document).ready(function() {

@@ -17,6 +17,7 @@ import java.net.*;
 public class LoginScreen extends Activity {
     private EditText username;
     private EditText password;
+    private static final String TAG = "Rangi_LoginScreen";
 
     URL url;
     URLConnection urlConn;
@@ -108,12 +109,15 @@ public class LoginScreen extends Activity {
 
                         /*
                         * User session IN APP
-                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
                         * This will be saved in the app so the user won't have to sign in every time the app is opened
+                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
+                        * Put the user's USERNAME in CONFIG_USER_USERNAME
+                        * Store the user's COOKIE in CONFIG_USER_COOKIE. This cookie is unique for each user and is used when a new color is saved in DB
                         */
                         SharedPreferences.Editor editor = userSettings.edit();
                         editor.putBoolean("CONFIG_USER_LOGIN", true);
                         editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
+                        editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
                         editor.commit();
 
                         Toast.makeText(LoginScreen.this, "Login successfull", Toast.LENGTH_SHORT).show();

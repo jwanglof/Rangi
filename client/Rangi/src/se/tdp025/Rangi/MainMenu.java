@@ -27,6 +27,12 @@ public class MainMenu extends Activity {
          */
     }
 
+    /*
+     * Override the default Back-button event
+     * This disabled the Back-button completely when in MainMenu
+     * According to the community it's not recommended to it like this but the flag doesn't seem to work,
+     * or we're trying to implement it the wrong way...
+     */
     @Override
     public void onBackPressed() {
         return;

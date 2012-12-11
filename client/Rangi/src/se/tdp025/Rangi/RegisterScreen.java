@@ -83,9 +83,6 @@ public class RegisterScreen extends Activity {
                         inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
-                            // Make sure that the user can't go back to RegisterScreen
-                            //finish();
-
                             Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
                         /*
@@ -108,7 +105,6 @@ public class RegisterScreen extends Activity {
                                 public void run() {
                                     // Go to the Main Menu
                                     Intent gotoMainMenu = new Intent(RegisterScreen.this, MainMenu.class);
-                                    //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(gotoMainMenu);
                                 }
 

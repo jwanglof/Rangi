@@ -1,13 +1,11 @@
 package se.tdp025.Rangi;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,7 +35,6 @@ public class RegisterScreen extends Activity {
     /**
      * Called when the activity is first created.
      */
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registerscreen);
@@ -88,15 +85,16 @@ public class RegisterScreen extends Activity {
                     inputJson = new org.json.JSONObject(result);
 
                     if (inputJson.getBoolean("success")) {
-                        finish(); // Not sure if this works??
+                        // Make sure that the user can't go back to RegisterScreen
+                        //finish();
 
                         Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-                    /*
-                     * User session IN APP
-                     * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
-                     * This will be saved in the app so the user won't have to sign in every time the app is opened
-                     */
+                        /*
+                        * User session IN APP
+                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
+                        * This will be saved in the app so the user won't have to sign in every time the app is opened
+                        */
                         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                         SharedPreferences.Editor editor = userSettings.edit();
@@ -111,6 +109,7 @@ public class RegisterScreen extends Activity {
                             public void run() {
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(RegisterScreen.this, MainMenu.class);
+                                //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(gotoMainMenu);
                             }
 
@@ -118,6 +117,10 @@ public class RegisterScreen extends Activity {
                     }
                     else {
                         Toast.makeText(RegisterScreen.this, inputJson.get("error").toString(), Toast.LENGTH_SHORT).show();
+
+                        // Let the user view the register screen again instead of jumping back to StartScreen
+                        Intent registerScreen = new Intent(RegisterScreen.this, RegisterScreen.class);
+                        startActivity(registerScreen);
                     }
 
                 }

@@ -3,7 +3,6 @@ package se.tdp025.Rangi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -48,7 +47,7 @@ public class LoginScreen extends Activity {
             try {
                 // make sure we close the login screen so the user won't come back when it presses back key
                 // Not sure about this either. Do we need to close this?  Or can this be done in StartScreen in some way?
-                finish();
+                //finish();
 
                 SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                 boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
@@ -58,12 +57,21 @@ public class LoginScreen extends Activity {
                  * Checks CONFIG_USER_LOGIN in SharedPreferences
                  */
                 if (user_login) {
+                    // Make sure that the user can't go back to LoginScreen
+                    //finish();
+
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
-                    gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    gotoMainMenu.putExtra("EXIT", true);
+                    //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(gotoMainMenu);
                 }
                 else {
+                    /*
+                     * Make sure that the user can't go back to LoginScreen
+                     * STILL doesn't work!
+                     * The problem now is that when the user hits the Back-button he will go to MainMenu
+                     */
+                    //finish();
+
                     url = new URL(Data.SERVER_ADDRESS + "login");
                     // URL Connection Channel
                     urlConn = url.openConnection();
@@ -97,6 +105,7 @@ public class LoginScreen extends Activity {
                      * Log in successfull
                      */
                     if (inputJson.getBoolean("success")) {
+
                         /*
                         * User session IN APP
                         * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
@@ -119,20 +128,21 @@ public class LoginScreen extends Activity {
                             public void run() {
                                 // Go to the Main Menu
                                 Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
-                                gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                gotoMainMenu.putExtra("EXIT", true);
+                                //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(gotoMainMenu);
                             }
 
                         }, 1500); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
-
-
                     }
                     /*
                      * Log in unsuccessfull
                      */
                     else {
                         Toast.makeText(LoginScreen.this, "Login not successfull!", Toast.LENGTH_SHORT).show();
+
+                        // Let the user view the login screen again instead of jumping back to StartScreen
+                        Intent loginScreen = new Intent(LoginScreen.this, LoginScreen.class);
+                        startActivity(loginScreen);
                     }
                 }
 

@@ -10,17 +10,20 @@
     <application android:label="@string/app_name"
             android:icon="@drawable/launcher">
         <activity android:name=".ColorInfo" android:theme="@android:style/Theme.NoTitleBar"/>
-        <activity android:name="se.tdp025.Rangi.LoginScreen"/>
+        <activity android:name="se.tdp025.Rangi.LoginScreen" android:theme="@android:style/Theme.NoTitleBar"/>
+        <!-- When the user access the MainMenu we can assume that he has signed in/registered and therefore clear the 'back-stack' -->
         <activity android:name="se.tdp025.Rangi.MainMenu" android:theme="@android:style/Theme.NoTitleBar"/>
-        <activity android:name="se.tdp025.Rangi.RegisterScreen"/>
+        <activity android:name="se.tdp025.Rangi.RegisterScreen" android:theme="@android:style/Theme.NoTitleBar"/>
         <activity android:name="se.tdp025.Rangi.SavedColors" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name="se.tdp025.Rangi.StartScreen"  android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name="se.tdp025.Rangi.ViewColor"  android:theme="@android:style/Theme.NoTitleBar"/>
+
         <activity android:name="se.tdp025.Rangi.SplashScreen" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="se.tdp025.Rangi.ViewColor"  android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity android:name=".analyze.CropImage.CropImage"
                   android:screenOrientation="landscape"

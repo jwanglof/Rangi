@@ -15,6 +15,27 @@ public class MainMenu extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainmenu);
+
+        /*
+         * Pretty sure this isn't necessary
+         * This should be done with flags BEFORE the user get access to MainMenu!
+
+        SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
+        boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
+        if (!user_login)
+            finish();
+         */
+    }
+
+    /*
+     * Override the default Back-button event
+     * This disabled the Back-button completely when in MainMenu
+     * According to the community it's not recommended to it like this but the flag doesn't seem to work,
+     * or we're trying to implement it the wrong way...
+     */
+    @Override
+    public void onBackPressed() {
+        return;
     }
 
     public void camera(View view) {
@@ -44,6 +65,9 @@ public class MainMenu extends Activity {
     }
 
     public void logout(View view) {
+        // Make sure that the user can't access MainMenu after he signed off
+        finish();
+
         Toast.makeText(this, "You have signed off. Plz come back to us!", Toast.LENGTH_LONG).show();
         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
         SharedPreferences.Editor editor = userSettings.edit();
@@ -51,7 +75,7 @@ public class MainMenu extends Activity {
         editor.putString("CONFIG_USER_USERNAME", "");
         editor.commit();
 
-        // Go to login screen!!
+        // Go to start screen
         Intent ss = new Intent(this, StartScreen.class);
         startActivity(ss);
     }

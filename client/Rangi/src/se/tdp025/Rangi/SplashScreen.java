@@ -30,16 +30,16 @@ public class SplashScreen extends Activity {
                 SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                 boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                 Toast.makeText(SplashScreen.this, String.valueOf(user_login), Toast.LENGTH_SHORT).show();
-                if (user_login)
-                    Toast.makeText(SplashScreen.this, "Welcome back, " + userSettings.getString("CONFIG_USER_USERNAME", ""), Toast.LENGTH_SHORT).show();
 
                 if (user_login) {
+                    Toast.makeText(SplashScreen.this, "Welcome back, " + userSettings.getString("CONFIG_USER_USERNAME", ""), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SplashScreen.this, MainMenu.class);
                     SplashScreen.this.startActivity(intent);
                 }
                 else {
-                    // start the home screen
+                    // Start the StartScreen
                     Intent intent = new Intent(SplashScreen.this, StartScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     SplashScreen.this.startActivity(intent);
                 }
 

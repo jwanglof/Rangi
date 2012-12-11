@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
@@ -40,6 +41,10 @@ public class RegisterScreen extends Activity {
         setContentView(R.layout.registerscreen);
     }
 
+    /*
+     * TODO
+     * Auto fill the forms when the user get Invalid fields!
+     */
     public void register(View view) {
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email_address);
@@ -115,6 +120,19 @@ public class RegisterScreen extends Activity {
 
                         }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
                     }
+                    else if (inputJson.get("error").toString().equals("Invalid fields.")) {
+                        /*
+                         * If the user doesn't fill all the fields
+                         * The fields will contain the value it previously had
+                         */
+                        Toast.makeText(RegisterScreen.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
+
+                        EditText editUsernameField = (EditText) findViewById(R.id.username);
+                        editUsernameField.setText(username.getText().toString(), TextView.BufferType.EDITABLE);
+
+                        EditText editEmailField = (EditText) findViewById(R.id.email_address);
+                        editEmailField.setText(email.getText().toString(), TextView.BufferType.EDITABLE);
+                    }
                     else {
                         Toast.makeText(RegisterScreen.this, inputJson.get("error").toString(), Toast.LENGTH_SHORT).show();
 
@@ -135,7 +153,7 @@ public class RegisterScreen extends Activity {
             }
         }
         else {
-            Toast.makeText(RegisterScreen.this, "Your username contains spaces. Please remove these and try to register again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterScreen.this, "Your username contains spaces. Please remove these and try again.", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -59,7 +59,7 @@ public class LoginScreen extends Activity {
                  */
                 if (user_login) {
                     // Make sure that the user can't go back to LoginScreen
-                    finish();
+                    //finish();
 
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
                     //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -71,7 +71,7 @@ public class LoginScreen extends Activity {
                      * STILL doesn't work!
                      * The problem now is that when the user hits the Back-button he will go to MainMenu
                      */
-                    finish();
+                    //finish();
 
                     url = new URL(Data.SERVER_ADDRESS + "login");
                     // URL Connection Channel

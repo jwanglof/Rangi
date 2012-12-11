@@ -14,14 +14,14 @@ public class StartScreen extends Activity {
 
     public void login(View view) {
         // Make sure that the user can't go back to LoginScreen
-        finish();
+        //finish();
         Intent login = new Intent(this, LoginScreen.class);
         startActivity(login);
     }
 
     public void register(View view) {
         // Make sure that the user can't go back to RegisterScreen
-        finish();
+        //finish();
         Intent register = new Intent(this, RegisterScreen.class);
         startActivity(register);
     }
@@ -30,7 +30,7 @@ public class StartScreen extends Activity {
      * REMOVE WHEN IN PRODUCTION!
      */
     public void mainmenu(View view) {
-        finish();
+        //finish();
         Intent mainmenu = new Intent(this, MainMenu.class);
         startActivity(mainmenu);
     }

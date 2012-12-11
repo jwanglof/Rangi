@@ -89,7 +89,7 @@ public class RegisterScreen extends Activity {
 
                     if (inputJson.getBoolean("success")) {
                         // Make sure that the user can't go back to RegisterScreen
-                        finish();
+                        //finish();
 
                         Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 

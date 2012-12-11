@@ -19,11 +19,17 @@ public class MainMenu extends Activity {
         /*
          * Pretty sure this isn't necessary
          * This should be done with flags BEFORE the user get access to MainMenu!
-         */
+
         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
         if (!user_login)
             finish();
+         */
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 
     public void camera(View view) {

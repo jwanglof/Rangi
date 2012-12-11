@@ -9,6 +9,12 @@ function create_color_element(color) {
 	box.find(".color_swatch").css("backgroundColor", color["hex"]);
 	box.find(".name").val(color["name"]);
 	box.find(".hex").text(color["hex"]);
+	if(color["hsv"] != undefined)
+		box.find(".hsv").text(color["hsv"]);
+
+	if(color["rgb"] != undefined)
+		box.find(".rgb").text(color["rgb"]);
+
 	box.find("img.delete").attr("data-color-id", color["_id"]);
 
 	$("#colors").append(box);

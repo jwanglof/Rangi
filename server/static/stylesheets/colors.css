@@ -84,6 +84,10 @@ img.delete {
 	display: inline;
 }
 
+.prototype {
+	display: none;
+}
+
 #titlebar {
 	height: 27px;
 	border-bottom: 1px solid #101010;

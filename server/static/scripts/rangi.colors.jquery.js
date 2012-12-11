@@ -3,20 +3,22 @@ function create_color_element(color) {
 
 	var color_repr = color["hex"];
 
-	var box = $(document.createElement("div")).addClass("color_box")
-	var container = $(document.createElement("div")).addClass("color_container");
-	var swatch = $(document.createElement("div")).addClass("color_swatch");
-	var name = $(document.createElement("span")).addClass("name");
-	var value = $(document.createElement("span"));
+	//var box = $(document.createElement("div")).addClass("color_box")
+	//var container = $(document.createElement("div")).addClass("color_container");
+	//var swatch = $(document.createElement("div")).addClass("color_swatch");
+	//var name = $(document.createElement("span")).addClass("name");
+	//var value = $(document.createElement("span"));
+	var box = $(".prototype").clone();
 
-	swatch.css("backgroundColor", color_repr["value"]);
-	name.text(color["name"]);
-	value.text(color_repr["value"]);
-
-	container.append(swatch).append(name).append("<br />").append(value);
-	box.append(container);
-	$("#colors").append(box);
+	box.removeClass("prototype");
 	box.addClass("bring_in");
+	box.attr("data-color-id", color["_id"]);
+	box.find(".color_swatch").css("backgroundColor", color_repr["value"]);
+	box.find(".name").val(color["name"]);
+	box.find(".hex").text(color_repr["value"]);
+	box.find("img.delete").attr("data-color-id", color["_id"]);
+
+	$("#colors").append(box);
 }
 
 function start_worker() {
@@ -39,7 +41,7 @@ function save_name(text_field) {
 	text_field.blur();
 
 	var new_name = text_field.val();
-	var color_id = text_field.parent(".color_box").attr("data-color-id")
+	var color_id = text_field.parents(".color_box").attr("data-color-id")
 	var args = {
 		"name": new_name,
 		"color_id": color_id
@@ -75,11 +77,11 @@ $(document).ready(function() {
 		toggle_swatch($(this));
 	});
 
-	$(".name").change(function() {
+	$(document).on("change", ".name", function() {
 		save_name($(this));
 	});
 
-	$(".color_box").on("click", "img.delete", function() {
+	$(document).on("click", "img.delete", function() {
 		delete_color($(this).attr("data-color-id"));
 	});
 });

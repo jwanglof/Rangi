@@ -18,6 +18,17 @@
 	<a href="/logout">Logout</a>
 </div>
 
+<div class="prototype color_box">
+	<img src="{{ url_for('static', filename='images/delete_button.png') }}" alt="Delete" class="delete"/>
+	<div class="color_container">
+		<div class="color_swatch"></div>
+		<input type="text" class="name" spellcheck="false"/><br />
+		<div class="hex value"></div>
+		<div class="rgb value"></div>
+		<div class="hsl value"></div>
+	</div>
+</div>
+
 <div id="colors">
 	{% for color in user.colors %}
 		<div class="color_box" data-color-id="{{ color["_id"] }}">

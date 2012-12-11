@@ -40,14 +40,14 @@ public class LoginScreen extends Activity {
 
         try {
             /*
-             * FIX!
+             * TODO
              * When the user hits the back-button when signed in he will be transfered out of the app, not back to the StartScreen!!
              * Thought finish() would fix this but it doesn't seem so.
-             * Do we need this in Register too?
              */
             try {
                 // make sure we close the login screen so the user won't come back when it presses back key
                 // Not sure about this either. Do we need to close this?  Or can this be done in StartScreen in some way?
+                // DOES NOT WORK!!!
                 //finish();
 
                 SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);

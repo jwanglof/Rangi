@@ -33,6 +33,8 @@ color_queue = {}
 def index():
 	if session.get("id", False):
 		user = db.find_user({"_id": session["id"]})
+		# Clear the color queue
+		color_queue[session["id"]] = []
 		return render_template('colors.html', user=user)
 	else:
 		return render_template('index.html')

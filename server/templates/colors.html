@@ -13,15 +13,22 @@
 
 {% block content %}
 
+<div id="titlebar">
+	<span class="title">Rangi - Your Colors</span>
+	<a href="/logout">Logout</a>
+</div>
+
 <div id="colors">
 	{% for color in user.colors %}
-		<img src="{{ url_for('static', filename='images/delete_button.png') }}" alt="Delete" class="delete" data-color-id="{{ color["_id"] }}" />
-		<div class="color_container" data-color-id="{{ color["_id"] }}">
-			<div class="color_swatch" style="background-color: {{ color['hex']['value'] }}"></div>
-			<input type="text" class="name" value="{{ color['name'] }}" spellcheck="false"/><br />
-			<div class="value">{{ color['hex']['value'] }}</div>
-			<div class="value">rgb(231, 102, 89)</div>
-			<div class="value">hsv(100, 23, 4)</div>
+		<div class="color_box" data-color-id="{{ color["_id"] }}">
+			<img src="{{ url_for('static', filename='images/delete_button.png') }}" alt="Delete" class="delete" data-color-id="{{ color["_id"] }}" />
+			<div class="color_container">
+				<div class="color_swatch" style="background-color: {{ color['hex']['value'] }}"></div>
+				<input type="text" class="name" value="{{ color['name'] }}" spellcheck="false"/><br />
+				<div class="value">{{ color['hex']['value'] }}</div>
+				<div class="value">rgb(231, 102, 89)</div>
+				<div class="value">hsv(100, 23, 4)</div>
+			</div>
 		</div>
 	{% endfor %}
 </div>

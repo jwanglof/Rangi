@@ -17,6 +17,7 @@ def succeeded():
 	return jsonify({"success": True})
 
 def logged_in():
+	if not session.get("id"): return False
 	user = db.find_user({"_id": session["id"]})
 	return not user == None
 
@@ -80,13 +81,12 @@ def register():
 
 @app.route("/login", methods = ["POST"])
 def login():
-	username = request.form["username"].strip().lower()
-	password = request.form["password"].strip()
+	username = request.form.get("username", "").strip().lower()
+	password = request.form.get("password", "").strip()
 	user = db.validate_credentials(username, password)	
 
 	if not user == None:
 		session["id"] = user["_id"]
-		session["color_queue"] = []
 		return jsonify({"success": True})
 
 	return jsonify({"success": False})
@@ -153,6 +153,16 @@ def update_color():
 	
 	return succeeded()
 
+@app.route("/delete", methods = ["POST"])
+def delete_color():
+	if not logged_in():
+		return failed()
+
+	color_id = request.form["color_id"]
+	print color_id
+	db.delete_color(session["id"], color_id)
+	
+	return succeeded()
+
 if __name__ == "__main__":
-	app.debug = True
 	app.run(host="0.0.0.0", threaded=True)

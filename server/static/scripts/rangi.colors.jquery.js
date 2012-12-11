@@ -3,6 +3,7 @@ function create_color_element(color) {
 
 	var color_repr = color["hex"];
 
+	var box = $(document.createElement("div")).addClass("color_box")
 	var container = $(document.createElement("div")).addClass("color_container");
 	var swatch = $(document.createElement("div")).addClass("color_swatch");
 	var name = $(document.createElement("span")).addClass("name");
@@ -13,9 +14,9 @@ function create_color_element(color) {
 	value.text(color_repr["value"]);
 
 	container.append(swatch).append(name).append("<br />").append(value);
-
-	$("#colors").append(container);
-	container.addClass("bring_in");
+	box.append(container);
+	$("#colors").append(box);
+	box.addClass("bring_in");
 }
 
 function start_worker() {
@@ -34,22 +35,11 @@ function start_worker() {
 	worker.postMessage({"message": "start"});
 }
 
-function position_delete_buttons() {
-	$("img.delete").each(function(i, elm) {
-		elm = $(elm);
-		var container = $(".color_container").eq(i);
-		var x = container.offset().left - 10.0;
-		var y = container.offset().top - 10.0;
-		console.log(y);
-		elm.offset({top: y, left: x});
-	});
-}
-
 function save_name(text_field) {
 	text_field.blur();
 
 	var new_name = text_field.val();
-	var color_id = text_field.parent(".color_container").attr("data-color-id")
+	var color_id = text_field.parent(".color_box").attr("data-color-id")
 	var args = {
 		"name": new_name,
 		"color_id": color_id
@@ -68,10 +58,18 @@ function toggle_swatch(swatch) {
 	swatch.stop().animate({"height": new_height}, "fast", "easeOutCubic");
 }
 
+function delete_color(color_id) {
+	if(color_id == undefined) return;
+
+	$.post("/delete", {"color_id": color_id}).success(function(response) {
+		$(".color_box[data-color-id='" + color_id + "']").fadeOut("fast", function() { $(this).remove(); });
+	}).error(function(response) {
+		console.log("Error");
+	});
+}
+
 $(document).ready(function() {
 	start_worker();
-
-	position_delete_buttons();
 
 	$("#colors").on("click", ".color_swatch", function() {
 		toggle_swatch($(this));
@@ -81,13 +79,7 @@ $(document).ready(function() {
 		save_name($(this));
 	});
 
-	/*$(".color_container").hover(function() {
-		var color_id = $(this).attr("data-color-id");
-		var button = $("img.delete[data-color-id='" + color_id + "']");
-		button.show();
-	}, function() {
-		var color_id = $(this).attr("data-color-id");
-		var button = $("img.delete[data-color-id='" + color_id + "']");
-		button.hide();
-	});*/
+	$(".color_box").on("click", "img.delete", function() {
+		delete_color($(this).attr("data-color-id"));
+	});
 });

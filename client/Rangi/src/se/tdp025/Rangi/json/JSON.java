@@ -8,7 +8,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se.tdp025.Rangi.Data;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Date;
 
 public class JSON {
 
@@ -79,12 +85,13 @@ public class JSON {
     /***
      * Save a new color the saved JSON object
      */
-    public static boolean saveToJson(String name, int color, Context context) {
+    public static JSONObject saveToJson(String name, int color, Context context) {
         SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
         SharedPreferences.Editor editor = prefs.edit();
         // Get JSON string from SharedPreferences
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);
+        JSONObject newColor = null;
         try {
 
             JSONArray colorsArray = json.getJSONArray("colors");
@@ -93,12 +100,12 @@ public class JSON {
             {
                 if(colorsArray.getJSONObject(i).getInt("android-color") == color)
                 {
-                    return false;
+                    return null;
                 }
             }
 
             // The new color, here we can add the hex etc.
-            JSONObject newColor = new JSONObject();
+            newColor = new JSONObject();
             newColor.put("name", name);
             newColor.put("android-color", color);
 
@@ -106,27 +113,70 @@ public class JSON {
 
             json.put("colors", colorsArray);
             editor.putString(Data.SHARED_COLORS, jsonToString(json));
-            return editor.commit();
+            editor.commit();
+            return newColor;
         } catch (JSONException e) {
             Log.e(TAG, "saveToJson: ");
             Log.getStackTraceString(e);
         }
 
-        return false;
+        return null;
+    }
+
+
+    public static void sendJsonToURL(URL url, JSONObject json, Context context)
+    {
+
+        try {
+
+            Log.d(TAG, "Save to Server | Content: " + json.toString());
+            URLConnection urlConn = url.openConnection();
+            SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
+            String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
+
+            // Activate input data
+            urlConn.setDoInput(true);
+            // Activate output data
+            urlConn.setDoOutput(true);
+            // Turn of caching
+            urlConn.setUseCaches(false);
+
+            urlConn.setRequestProperty("Cookie", cookie);
+            urlConn.setRequestProperty("Content-Type", "application/json");
+            DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
+
+            printout.writeBytes(json.toString());
+            printout.flush();
+            printout.close();
+
+            DataInputStream input = new DataInputStream(urlConn.getInputStream());
+
+            /*String str = null;
+            Log.v(TAG, "Response: ");
+            while (null != (str = input.readLine())) {
+                Log.v(TAG, str);
+            } */
+
+        } catch (Exception e) {
+            Log.e(TAG, "sendJsonToURL: " + e);
+            for(int i = 0; i < e.getStackTrace().length; i++)
+                Log.e(TAG, e.getStackTrace()[i].toString());
+        }
+
     }
 
     /***
      * JSONObject to a string
      */
     public static String jsonToString(JSONObject jsonObject) {
-       return jsonObject.toString();
+        return jsonObject.toString();
     }
 
     /***
      * Delete color from the stored JSON
      */
     public static void deleteFromJSON(int color, Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("RANGI", 0);
+        SharedPreferences prefs = context.getSharedPreferences(Data.PREFS_NAME, 0);
         SharedPreferences.Editor editor = prefs.edit();
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);

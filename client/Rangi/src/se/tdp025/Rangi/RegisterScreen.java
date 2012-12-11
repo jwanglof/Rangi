@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
@@ -98,8 +99,9 @@ public class RegisterScreen extends Activity {
                         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                         SharedPreferences.Editor editor = userSettings.edit();
-                        editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
                         editor.putBoolean("CONFIG_USER_LOGIN", true);
+                        editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
+                        editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
                         editor.commit();
 
                         Handler handler = new Handler();
@@ -114,6 +116,19 @@ public class RegisterScreen extends Activity {
                             }
 
                         }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+                    }
+                    else if (inputJson.get("error").toString().equals("Invalid fields.")) {
+                        /*
+                         * If the user doesn't fill all the fields
+                         * The fields will contain the value it previously had
+                         */
+                        Toast.makeText(RegisterScreen.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
+
+                        EditText editUsernameField = (EditText) findViewById(R.id.username);
+                        editUsernameField.setText(username.getText().toString(), TextView.BufferType.EDITABLE);
+
+                        EditText editEmailField = (EditText) findViewById(R.id.email_address);
+                        editEmailField.setText(email.getText().toString(), TextView.BufferType.EDITABLE);
                     }
                     else {
                         Toast.makeText(RegisterScreen.this, inputJson.get("error").toString(), Toast.LENGTH_SHORT).show();
@@ -135,7 +150,7 @@ public class RegisterScreen extends Activity {
             }
         }
         else {
-            Toast.makeText(RegisterScreen.this, "Your username contains spaces. Please remove these and try to register again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterScreen.this, "Your username contains spaces. Please remove these and try again.", Toast.LENGTH_SHORT).show();
         }
 
     }

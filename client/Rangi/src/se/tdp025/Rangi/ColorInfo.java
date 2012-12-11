@@ -1,5 +1,7 @@
 package se.tdp025.Rangi;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.json.JSONObject;
 import se.tdp025.Rangi.json.JSON;
 
 public class ColorInfo extends Activity {
@@ -29,6 +32,9 @@ public class ColorInfo extends Activity {
 
     private Context context;
     private int colorCode;
+    private String hex;
+    private StringBuilder sbHSV;
+    private StringBuilder sbRGB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class ColorInfo extends Activity {
         //colorView.setText(Integer.toString(color));
 
         //Hex format
-        String hex = String.format("#%06X", (0xFFFFFF & colorCode));
+        hex = String.format("#%06X", (0xFFFFFF & colorCode));
         final TextView hexView = (TextView) findViewById(R.id.hex_data);
         hexView.setText(hex);
 
@@ -78,7 +84,7 @@ public class ColorInfo extends Activity {
         float[] hsv = new float[3];
         Color.colorToHSV(colorCode, hsv);
 
-        StringBuilder sbHSV = new StringBuilder();
+        sbHSV = new StringBuilder();
         sbHSV.append(Math.round(hsv[0]) + "\u00B0, ");
         sbHSV.append(Math.round(hsv[1] * 100) + "\u0025, ");
         sbHSV.append(Math.round(hsv[2] * 100) + "\u0025");
@@ -109,7 +115,7 @@ public class ColorInfo extends Activity {
         rgb.add(blue);
 
         //Convert RGB to String
-        StringBuilder sbRGB = new StringBuilder();
+        sbRGB = new StringBuilder();
         int size = rgb.size();
         boolean separatorRGB = false;
         for(int i = 0; i < size; i++) {
@@ -249,6 +255,17 @@ public class ColorInfo extends Activity {
     public void saveColor(String name, int color) {
         if(name.length() < 1)
             name = "Undefined";
-        JSON.saveToJson(name, color, context);
+        JSONObject json = JSON.saveToJson(name, color, context);
+        try {
+            json.put("hex", hex);
+            json.put("hsv", "hsv(" + sbHSV.toString().replaceAll("°", "&deg;") + ")");
+            json.put("rgb", "rgb(" + sbRGB.toString() + ")");
+            URL url = new URL(Data.SERVER_ADDRESS + "save");
+            JSON.sendJsonToURL(url, json, context);
+        } catch (Exception e) {
+            Log.e(TAG, "saveColor: " + e);
+            for(int i = 0; i < e.getStackTrace().length; i++)
+                Log.e(TAG, e.getStackTrace()[i].toString());
+        }
     }
 }

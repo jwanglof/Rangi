@@ -8,5 +8,5 @@ public class Data {
      * Used for user sessions
      * Will be used for log ins and registrations
      */
-    public static final String PREFS_NAME = "MyPrefsFile";
+    public static final String PREFS_NAME = "RANGI";
 }

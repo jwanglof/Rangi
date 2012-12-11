@@ -1,21 +1,14 @@
 function create_color_element(color) {
 	// TODO: Add support for representations other than hex
 
-	var color_repr = color["hex"];
-
-	//var box = $(document.createElement("div")).addClass("color_box")
-	//var container = $(document.createElement("div")).addClass("color_container");
-	//var swatch = $(document.createElement("div")).addClass("color_swatch");
-	//var name = $(document.createElement("span")).addClass("name");
-	//var value = $(document.createElement("span"));
 	var box = $(".prototype").clone();
 
 	box.removeClass("prototype");
 	box.addClass("bring_in");
 	box.attr("data-color-id", color["_id"]);
-	box.find(".color_swatch").css("backgroundColor", color_repr["value"]);
+	box.find(".color_swatch").css("backgroundColor", color["hex"]);
 	box.find(".name").val(color["name"]);
-	box.find(".hex").text(color_repr["value"]);
+	box.find(".hex").text(color["hex"]);
 	box.find("img.delete").attr("data-color-id", color["_id"]);
 
 	$("#colors").append(box);

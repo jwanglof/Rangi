@@ -41,10 +41,6 @@ public class RegisterScreen extends Activity {
         setContentView(R.layout.registerscreen);
     }
 
-    /*
-     * TODO
-     * Auto fill the forms when the user get Invalid fields!
-     */
     public void register(View view) {
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email_address);
@@ -103,8 +99,9 @@ public class RegisterScreen extends Activity {
                         SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                         boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                         SharedPreferences.Editor editor = userSettings.edit();
-                        editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
                         editor.putBoolean("CONFIG_USER_LOGIN", true);
+                        editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
+                        editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
                         editor.commit();
 
                         Handler handler = new Handler();

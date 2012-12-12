@@ -39,17 +39,7 @@ public class LoginScreen extends Activity {
         password = (EditText) findViewById(R.id.password);
 
         try {
-            /*
-             * FIX!
-             * When the user hits the back-button when signed in he will be transfered out of the app, not back to the StartScreen!!
-             * Thought finish() would fix this but it doesn't seem so.
-             * Do we need this in Register too?
-             */
             try {
-                // make sure we close the login screen so the user won't come back when it presses back key
-                // Not sure about this either. Do we need to close this?  Or can this be done in StartScreen in some way?
-                //finish();
-
                 SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                 boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
 
@@ -58,21 +48,12 @@ public class LoginScreen extends Activity {
                  * Checks CONFIG_USER_LOGIN in SharedPreferences
                  */
                 if (user_login) {
-                    // Make sure that the user can't go back to LoginScreen
-                    //finish();
 
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
                     //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(gotoMainMenu);
                 }
                 else {
-                    /*
-                     * Make sure that the user can't go back to LoginScreen
-                     * STILL doesn't work!
-                     * The problem now is that when the user hits the Back-button he will go to MainMenu
-                     */
-                    //finish();
-
                     url = new URL(Data.SERVER_ADDRESS + "login");
                     // URL Connection Channel
                     urlConn = url.openConnection();
@@ -136,7 +117,7 @@ public class LoginScreen extends Activity {
                                 startActivity(gotoMainMenu);
                             }
 
-                        }, 1500); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+                        }, 1000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
                     }
                     /*
                      * Log in unsuccessfull

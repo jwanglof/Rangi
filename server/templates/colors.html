@@ -38,7 +38,9 @@
 				<input type="text" class="name" value="{{ color['name'] }}" spellcheck="false"/><br />
 				<div class="hex value">{{ color['hex'] }}</div>
 				<div class="rgb value">{{ color['rgb'] }}</div>
+				{% autoescape False %}
 				<div class="hsv value">{{ color['hsv'] }}</div>
+				{% endautoescape %}
 			</div>
 		</div>
 	{% endfor %}

@@ -31,7 +31,7 @@ def add_color(user, color):
 	if not color: return False
 
 	color["_id"] = str(ObjectId())
-	db.users.update(user, {"$push": {"colors": color}})
+	db.users.update({"_id": user["_id"]}, {"$push": {"colors": color}})
 
 	return True
 
@@ -46,3 +46,11 @@ def delete_color(user_id, color_id):
 	query = {"_id": user_id}
 	update = {"$pop": {"colors": {"_id": color_id}}}
 	db.users.update(query, update)
+
+def colors_for_user(user_id):
+	if not user_id: return None
+
+	user_doc = find_user({"_id": user_id})
+	if not user_doc: return None
+
+	return user_doc["colors"]

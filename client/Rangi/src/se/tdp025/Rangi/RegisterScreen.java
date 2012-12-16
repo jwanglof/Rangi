@@ -48,7 +48,10 @@ public class RegisterScreen extends Activity {
         password = (EditText) findViewById(R.id.password);
         password_repeat = (EditText) findViewById(R.id.password_repeat);
 
-        if (checkSpaces(username.getText().toString())) {
+        //if (checkSpaces(username.getText().toString())) {
+        Pattern p = Pattern.compile("\\s");
+        Matcher m = p.matcher(username.getText().toString());
+        if (!m.find()) {
             if (checkEmail(email.getText().toString())) {
                 try {
                     url = new URL(Data.SERVER_ADDRESS + "register");
@@ -162,8 +165,13 @@ public class RegisterScreen extends Activity {
 
     /*
      * Make sure that the username doesn't contain any spaces
+     * Does. Not. Work....
      */
     private boolean checkSpaces(String username) {
+
+        /*Pattern p = Pattern.compile("\\s");
+        Matcher m = p.matcher(username.getText().toString());*/
+
         Pattern p = Pattern.compile("\\s");
         return p.matcher(username).matches();
     }

@@ -208,7 +208,7 @@ public class ColorInfo extends Activity {
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                         // Close
+                        // Close
                     }
                 });
                 dialog = builder.create();
@@ -255,7 +255,9 @@ public class ColorInfo extends Activity {
     public void saveColor(String name, int color) {
         if(name.length() < 1)
             name = "Undefined";
+
         JSONObject json = JSON.saveToJson(name, color, context);
+
         try {
             json.put("hex", hex);
             json.put("hsv", "hsv(" + sbHSV.toString().replaceAll("°", "&deg;") + ")");

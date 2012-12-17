@@ -3,7 +3,7 @@ import utils
 
 from bson.objectid import ObjectId
 
-db = pymongo.Connection().rangi
+db = pymongo.Connection("127.0.0.1", 27017).rangi
 
 def save_user(user):
 	db.users.insert(user)

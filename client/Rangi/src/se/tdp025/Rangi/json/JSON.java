@@ -11,9 +11,7 @@ import se.tdp025.Rangi.Data;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.Date;
 
 public class JSON {
@@ -29,7 +27,11 @@ public class JSON {
      */
 
     private static final String TAG = "Rangi_JSON";
-
+    private static URL url;
+    private static URLConnection urlConn;
+    private static HttpURLConnection httpConn;
+    private static DataOutputStream printout;
+    private static String content;
 
     /***
      * Parse a string to a JSONObject
@@ -108,6 +110,7 @@ public class JSON {
             newColor = new JSONObject();
             newColor.put("name", name);
             newColor.put("android-color", color);
+            newColor.put("id", color);
 
             colorsArray.put(newColor);
 
@@ -128,9 +131,9 @@ public class JSON {
     {
 
         try {
-
             Log.d(TAG, "Save to Server | Content: " + json.toString());
-            URLConnection urlConn = url.openConnection();
+
+            urlConn = url.openConnection();
             SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
             String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
 
@@ -172,6 +175,34 @@ public class JSON {
         return jsonObject.toString();
     }
 
+    private static boolean deleteFromURL(int androidColor) {
+        try {
+            url = new URL(Data.SERVER_ADDRESS + "delete");
+            // URL Connection Channel
+            urlConn = url.openConnection();
+            httpConn = (HttpURLConnection) urlConn;
+            // Activate input data
+            urlConn.setDoInput(true);
+            // Activate output data
+            urlConn.setDoOutput(true);
+            // Turn of caching
+            urlConn.setUseCaches(false);
+            // Content type
+            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            printout = new DataOutputStream(urlConn.getOutputStream());
+            content = "color_id=" + URLEncoder.encode(Integer.toString(androidColor));
+            printout.writeBytes(content);
+            printout.flush();
+            printout.close();
+            Log.d(TAG, "deleteFromURL: Accepted");
+            return true;
+        }
+        catch (Exception e) {
+            Log.e(TAG, "deleteFromURL: Error - " + e);
+            return false;
+        }
+    }
+
     /***
      * Delete color from the stored JSON
      */
@@ -181,7 +212,7 @@ public class JSON {
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);
         try {
-
+            Log.d(TAG, "deleteFromJSON: Accepted");
             JSONArray colorsArray = json.getJSONArray("colors");
             JSONArray newColorArray = new JSONArray();
             //Find if the color already exist in the JSONArray
@@ -194,13 +225,15 @@ public class JSON {
                 }
             }
 
+            deleteFromURL(color);
+
             json.put("colors", newColorArray);
             editor.putString(Data.SHARED_COLORS, jsonToString(json));
             editor.commit();
-        } catch (JSONException e) {
-            Log.e(TAG, "deleteFromJSON: ");
+        } catch (Exception e) {
+            Log.e(TAG, "deleteFromJSON: Neglected, " + e);
             Log.getStackTraceString(e);
-        }
 
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class StartScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
@@ -12,24 +13,27 @@ public class StartScreen extends Activity {
     }
 
     public void login(View view) {
-        // Make sure that the user can't go back to LoginScreen
-        //finish();
-        Intent login = new Intent(this, LoginScreen.class);
-        startActivity(login);
+        if (Data.isNetworkConnected(this)) {
+            Intent login = new Intent(this, LoginScreen.class);
+            startActivity(login);
+        }
+        else
+            Toast.makeText(this, "You don't have an internet connection. Please connect to the internet and try again.", Toast.LENGTH_LONG).show();
     }
 
     public void register(View view) {
-        // Make sure that the user can't go back to RegisterScreen
-        //finish();
-        Intent register = new Intent(this, RegisterScreen.class);
-        startActivity(register);
+        if (Data.isNetworkConnected(this)) {
+            Intent register = new Intent(this, RegisterScreen.class);
+            startActivity(register);
+        }
+        else
+            Toast.makeText(this, "You don't have an internet connection. Please connect to the internet and try again.", Toast.LENGTH_LONG).show();
     }
 
     /*
      * REMOVE WHEN IN PRODUCTION!
      */
     public void mainmenu(View view) {
-        //finish();
         Intent mainmenu = new Intent(this, MainMenu.class);
         startActivity(mainmenu);
     }

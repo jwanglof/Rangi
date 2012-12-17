@@ -26,14 +26,17 @@ function append_color(color) {
 
 function remove_color_with_id(color_id) {
 	console.log("Removing " + color_id);
-	$(".color_box[data-color-id='" + color_id + "']").remove();
+	$(".color_box[data-color-id='" + color_id + "']").fadeOut("fast", function() {
+		$(this).remove();
+	});
 }
 
 function apply_diff(diff) {
 	var added_colors = diff["added"];
 	var removed_color_ids = diff["removed"];
 
-	console.log("Applying diff");
+	console.log("Applying diff:");
+	console.log(diff);
 	for(var i in added_colors) {
 		var color = added_colors[i];
 		append_color(color);

@@ -160,6 +160,7 @@ def diff_colors():
 		filtered_list = filter(lambda c: c.get("_id") == color_id, color_list)
 		return len(filtered_list) > 0
 
+
 	diff = {
 		"added": [c for c in all_colors if c.get("_id") not in fetched_color_ids],
 		"removed": [c_id for c_id in fetched_color_ids if not has_color(all_colors, c_id)]
@@ -190,7 +191,7 @@ def delete_color():
 
 	color_id = request.form["color_id"]
 	db.delete_color(session["id"], color_id)
-	
+
 	return succeeded()
 
 if __name__ == "__main__":

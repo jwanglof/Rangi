@@ -27,11 +27,6 @@ public class JSON {
      */
 
     private static final String TAG = "Rangi_JSON";
-    private static URL url;
-    private static URLConnection urlConn;
-    private static HttpURLConnection httpConn;
-    private static DataOutputStream printout;
-    private static String content;
 
     /***
      * Parse a string to a JSONObject
@@ -110,7 +105,7 @@ public class JSON {
             newColor = new JSONObject();
             newColor.put("name", name);
             newColor.put("android-color", color);
-            newColor.put("id", color);
+            newColor.put("_id", color);
 
             colorsArray.put(newColor);
 
@@ -133,7 +128,7 @@ public class JSON {
         try {
             Log.d(TAG, "Save to Server | Content: " + json.toString());
 
-            urlConn = url.openConnection();
+            URLConnection urlConn = url.openConnection();
             SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
             String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
 
@@ -153,6 +148,9 @@ public class JSON {
             printout.close();
 
             DataInputStream input = new DataInputStream(urlConn.getInputStream());
+
+
+            Log.d(TAG, "sendJsonToURL: Cookie: " + cookie);
 
             /*String str = null;
             Log.v(TAG, "Response: ");
@@ -175,26 +173,44 @@ public class JSON {
         return jsonObject.toString();
     }
 
-    private static boolean deleteFromURL(int androidColor) {
+    /*
+     * Delete a color from the database
+     */
+    private static boolean deleteFromURL(int androidColor, Context context) {
         try {
-            url = new URL(Data.SERVER_ADDRESS + "delete");
+            SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
+            String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
+
+            URL url = new URL(Data.SERVER_ADDRESS + "delete");
             // URL Connection Channel
-            urlConn = url.openConnection();
-            httpConn = (HttpURLConnection) urlConn;
+            URLConnection urlConn2 = url.openConnection();
             // Activate input data
-            urlConn.setDoInput(true);
+            urlConn2.setDoInput(true);
             // Activate output data
-            urlConn.setDoOutput(true);
+            urlConn2.setDoOutput(true);
             // Turn of caching
-            urlConn.setUseCaches(false);
+            urlConn2.setUseCaches(false);
             // Content type
-            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            printout = new DataOutputStream(urlConn.getOutputStream());
-            content = "color_id=" + URLEncoder.encode(Integer.toString(androidColor));
-            printout.writeBytes(content);
-            printout.flush();
-            printout.close();
-            Log.d(TAG, "deleteFromURL: Accepted");
+            urlConn2.setRequestProperty("Cookie", cookie);
+            urlConn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            DataOutputStream printout2 = new DataOutputStream(urlConn2.getOutputStream());
+            String content = "color_id=" + URLEncoder.encode(Integer.toString(androidColor));
+            printout2.writeBytes(content);
+            printout2.flush();
+            printout2.close();
+
+            DataInputStream input2 = new DataInputStream(urlConn2.getInputStream());
+
+            Log.d(TAG, "deleteFromURL: androidColor: " + Integer.toString(androidColor));
+            Log.d(TAG, "deleteFromURL: Cookie: " + cookie);
+            Log.d(TAG, "deleteFromURL: Color deleted");
+
+            String str = null;
+            Log.v(TAG, "Response: ");
+            while (null != (str = input2.readLine())) {
+                Log.v(TAG, str);
+            }
+
             return true;
         }
         catch (Exception e) {
@@ -225,7 +241,7 @@ public class JSON {
                 }
             }
 
-            deleteFromURL(color);
+            deleteFromURL(color, context);
 
             json.put("colors", newColorArray);
             editor.putString(Data.SHARED_COLORS, jsonToString(json));

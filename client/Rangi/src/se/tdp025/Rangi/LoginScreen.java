@@ -15,8 +15,6 @@ import java.io.DataOutputStream;
 import java.net.*;
 
 public class LoginScreen extends Activity {
-    private EditText username;
-    private EditText password;
     private static final String TAG = "Rangi_LoginScreen";
 
     URL url;
@@ -35,8 +33,8 @@ public class LoginScreen extends Activity {
     }
 
     public void login(View view) {
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        EditText username = (EditText) findViewById(R.id.username);
+        EditText password = (EditText) findViewById(R.id.password);
 
         try {
             try {

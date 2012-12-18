@@ -48,7 +48,10 @@ public class RegisterScreen extends Activity {
         password = (EditText) findViewById(R.id.password);
         password_repeat = (EditText) findViewById(R.id.password_repeat);
 
-        if (checkSpaces(username.getText().toString())) {
+        //if (checkSpaces(username.getText().toString())) {
+        Pattern p = Pattern.compile("\\s");
+        Matcher m = p.matcher(username.getText().toString());
+        if (!m.find()) {
             if (checkEmail(email.getText().toString())) {
                 try {
                     url = new URL(Data.SERVER_ADDRESS + "register");
@@ -83,7 +86,7 @@ public class RegisterScreen extends Activity {
                         inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
-                            Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterScreen.this, "Registration successful. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
                         /*
                         * User session IN APP
@@ -162,8 +165,13 @@ public class RegisterScreen extends Activity {
 
     /*
      * Make sure that the username doesn't contain any spaces
+     * Does. Not. Work....
      */
     private boolean checkSpaces(String username) {
+
+        /*Pattern p = Pattern.compile("\\s");
+        Matcher m = p.matcher(username.getText().toString());*/
+
         Pattern p = Pattern.compile("\\s");
         return p.matcher(username).matches();
     }

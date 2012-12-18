@@ -30,10 +30,19 @@
 
     </LinearLayout>
 
+	<ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_gravity="center_vertical|center_horizontal|center"
+        android:layout_weight="1"
+        android:background="#f0f0f0"
+        android:gravity="center_vertical|center_horizontal|center" >
+    
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="0dp"
-	    android:layout_weight="1"
+	    android:layout_gravity="center_vertical|center_horizontal|center"
 	    android:background="#f0f0f0"
 	    android:gravity="center_vertical|center_horizontal|center"
 	    android:orientation="vertical"
@@ -140,4 +149,5 @@
             android:textStyle="bold" />
 
 		</LinearLayout>
+		</ScrollView>
 </LinearLayout>

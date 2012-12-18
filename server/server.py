@@ -112,11 +112,12 @@ def save_color():
 	if not db.add_color(user, color):
 		return failed()
 
+	print "Saved", color, "to", user["username"]
 	# Queue the color so we can send
 	# it to the client
-	if not color_queue.get(session["id"]):
-		color_queue[session["id"]] = []
-	color_queue[session["id"]].append(color)
+	#if not color_queue.get(session["id"]):
+	#	color_queue[session["id"]] = []
+	#color_queue[session["id"]].append(color)
 
 	return succeeded()
 
@@ -144,6 +145,34 @@ def poll_queue():
 	print {"success": True, "colors": colors}
 	return response
 
+@app.route("/diff", methods = ["POST"])
+def diff_colors():
+	if not logged_in():
+		return failed()
+
+	if not request.json:
+		return failed()
+
+	fetched_color_ids = request.json["colors"]
+	all_colors = db.colors_for_user(session["id"])
+
+	def has_color(color_list, color_id):
+		filtered_list = filter(lambda c: c.get("_id") == color_id, color_list)
+		return len(filtered_list) > 0
+
+
+	diff = {
+		"added": [c for c in all_colors if c.get("_id") not in fetched_color_ids],
+		"removed": [c_id for c_id in fetched_color_ids if not has_color(all_colors, c_id)]
+	}
+
+	response = {
+		"success": True,
+		"diff": diff
+	}
+
+	return jsonify(response)
+
 @app.route("/update", methods = ["POST"])
 def update_color():
 	if not logged_in():
@@ -161,10 +190,10 @@ def delete_color():
 		return failed()
 
 	color_id = request.form["color_id"]
-	print color_id
 	db.delete_color(session["id"], color_id)
-	
+
 	return succeeded()
 
 if __name__ == "__main__":
+	app.debug = True
 	app.run(host="0.0.0.0", threaded=True)

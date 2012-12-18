@@ -3,7 +3,7 @@ import utils
 
 from bson.objectid import ObjectId
 
-db = pymongo.Connection().rangi
+db = pymongo.Connection("127.0.0.1", 27017).rangi
 
 def save_user(user):
 	db.users.insert(user)
@@ -30,8 +30,9 @@ def add_color(user, color):
 	if not user: return False
 	if not color: return False
 
-	color["_id"] = str(ObjectId())
-	db.users.update(user, {"$push": {"colors": color}})
+	if not color.get("_id"):
+		color["_id"] = str(ObjectId())
+	db.users.update({"_id": user["_id"]}, {"$push": {"colors": color}})
 
 	return True
 
@@ -44,5 +45,13 @@ def update_color_name(user_id, color_id, new_name):
 
 def delete_color(user_id, color_id):
 	query = {"_id": user_id}
-	update = {"$pop": {"colors": {"_id": color_id}}}
+	update = {"$pull": {"colors": {"_id": color_id}}}
 	db.users.update(query, update)
+
+def colors_for_user(user_id):
+	if not user_id: return None
+
+	user_doc = find_user({"_id": user_id})
+	if not user_doc: return None
+
+	return user_doc["colors"]

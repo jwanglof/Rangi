@@ -11,9 +11,7 @@ import se.tdp025.Rangi.Data;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.Date;
 
 public class JSON {
@@ -29,7 +27,6 @@ public class JSON {
      */
 
     private static final String TAG = "Rangi_JSON";
-
 
     /***
      * Parse a string to a JSONObject
@@ -108,6 +105,7 @@ public class JSON {
             newColor = new JSONObject();
             newColor.put("name", name);
             newColor.put("android-color", color);
+            newColor.put("_id", color);
 
             colorsArray.put(newColor);
 
@@ -128,8 +126,8 @@ public class JSON {
     {
 
         try {
-
             Log.d(TAG, "Save to Server | Content: " + json.toString());
+
             URLConnection urlConn = url.openConnection();
             SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
             String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
@@ -150,6 +148,9 @@ public class JSON {
             printout.close();
 
             DataInputStream input = new DataInputStream(urlConn.getInputStream());
+
+
+            Log.d(TAG, "sendJsonToURL: Cookie: " + cookie);
 
             /*String str = null;
             Log.v(TAG, "Response: ");
@@ -172,6 +173,52 @@ public class JSON {
         return jsonObject.toString();
     }
 
+    /*
+     * Delete a color from the database
+     */
+    private static boolean deleteFromURL(int androidColor, Context context) {
+        try {
+            SharedPreferences userSettings = context.getSharedPreferences(Data.PREFS_NAME, 0);
+            String cookie = userSettings.getString("CONFIG_USER_COOKIE", "");
+
+            URL url = new URL(Data.SERVER_ADDRESS + "delete");
+            // URL Connection Channel
+            URLConnection urlConn2 = url.openConnection();
+            // Activate input data
+            urlConn2.setDoInput(true);
+            // Activate output data
+            urlConn2.setDoOutput(true);
+            // Turn of caching
+            urlConn2.setUseCaches(false);
+            // Content type
+            urlConn2.setRequestProperty("Cookie", cookie);
+            urlConn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            DataOutputStream printout2 = new DataOutputStream(urlConn2.getOutputStream());
+            String content = "color_id=" + URLEncoder.encode(Integer.toString(androidColor));
+            printout2.writeBytes(content);
+            printout2.flush();
+            printout2.close();
+
+            DataInputStream input2 = new DataInputStream(urlConn2.getInputStream());
+
+            Log.d(TAG, "deleteFromURL: androidColor: " + Integer.toString(androidColor));
+            Log.d(TAG, "deleteFromURL: Cookie: " + cookie);
+            Log.d(TAG, "deleteFromURL: Color deleted");
+
+            String str = null;
+            Log.v(TAG, "Response: ");
+            while (null != (str = input2.readLine())) {
+                Log.v(TAG, str);
+            }
+
+            return true;
+        }
+        catch (Exception e) {
+            Log.e(TAG, "deleteFromURL: Error - " + e);
+            return false;
+        }
+    }
+
     /***
      * Delete color from the stored JSON
      */
@@ -181,7 +228,7 @@ public class JSON {
         String jsonString = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
         JSONObject json = parse(jsonString);
         try {
-
+            Log.d(TAG, "deleteFromJSON: Accepted");
             JSONArray colorsArray = json.getJSONArray("colors");
             JSONArray newColorArray = new JSONArray();
             //Find if the color already exist in the JSONArray
@@ -194,13 +241,15 @@ public class JSON {
                 }
             }
 
+            deleteFromURL(color, context);
+
             json.put("colors", newColorArray);
             editor.putString(Data.SHARED_COLORS, jsonToString(json));
             editor.commit();
-        } catch (JSONException e) {
-            Log.e(TAG, "deleteFromJSON: ");
+        } catch (Exception e) {
+            Log.e(TAG, "deleteFromJSON: Neglected, " + e);
             Log.getStackTraceString(e);
-        }
 
+        }
     }
 }

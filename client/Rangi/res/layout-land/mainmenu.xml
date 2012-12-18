@@ -4,7 +4,6 @@
     android:layout_height="fill_parent"
     android:layout_gravity="top|center_horizontal"
     android:background="#f0f0f0"
-    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -31,7 +30,7 @@
 
     </LinearLayout>
 
-    <ScrollView
+	<ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -39,13 +38,15 @@
         android:layout_weight="1"
         android:background="#f0f0f0"
         android:gravity="center_vertical|center_horizontal|center" >
-
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#f0f0f0"
-    android:gravity="center_vertical|center_horizontal|center"
-    android:orientation="vertical" >
+    
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="0dp"
+	    android:layout_gravity="center_vertical|center_horizontal|center"
+	    android:background="#f0f0f0"
+	    android:gravity="center_vertical|center_horizontal|center"
+	    android:orientation="vertical"
+	    android:scrollbars="vertical" >
 
     <Button
         android:id="@+id/camera_button"
@@ -131,7 +132,7 @@
         android:textSize="@dimen/button_text_size"
         android:textStyle="bold" />
 
-    <Button
+        <Button
             android:id="@+id/logout_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -147,5 +148,5 @@
             android:textSize="@dimen/button_text_size"
             android:textStyle="bold" />
 		</LinearLayout>
-    </ScrollView>
+		</ScrollView>
 </LinearLayout>

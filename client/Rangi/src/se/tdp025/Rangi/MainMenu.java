@@ -18,7 +18,6 @@ public class MainMenu extends Activity {
         setContentView(R.layout.mainmenu);
     }
 
-
     /*
      * Overrides the back-button so it acts like the home-button
      */

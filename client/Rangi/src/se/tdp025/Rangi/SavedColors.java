@@ -63,8 +63,9 @@ public class SavedColors extends Activity {
         ArrayList<Integer> colorArray = new ArrayList<Integer>();
 
         SharedPreferences prefs = this.getSharedPreferences("RANGI", 0);
-
         String result = prefs.getString(Data.SHARED_COLORS, "{'colors' : []}");
+
+        // Send to server to delete: result['android-color']
         Log.e(TAG, "RES: " + result);
         JSONObject jsonObject = JSON.parse(result);
         try {
@@ -72,11 +73,10 @@ public class SavedColors extends Activity {
             for(int i = 0; i < array.length(); i++){
                 colorArray.add(array.getJSONObject(i).getInt("android-color"));
             }
-
-
         } catch (JSONException e) {
             finish();
         }
+
         ListView listView = (ListView)findViewById(R.id.list);
         colorAdapter = new ColorAdapter(this, colorArray);
         listView.setAdapter(colorAdapter);

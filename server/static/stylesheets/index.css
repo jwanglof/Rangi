@@ -69,6 +69,7 @@ canvas {
 #main {
 	width: 300px;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#eeeeee));
+	background: -moz-linear-gradient(to bottom, #ffffff, #eeeeee);
 	
 	padding: 10px 10px 0px 10px;
 	margin: -140px -150px;
@@ -79,7 +80,7 @@ canvas {
 	border-radius: 8px;
 
 	box-shadow: 0px 0px 8px #555555;
-	-webkit-filter: opacity(0.95);
+	opacity: 0.95;
 
 	z-index: 2;
 	text-align: center;

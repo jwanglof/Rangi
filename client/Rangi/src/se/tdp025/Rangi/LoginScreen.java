@@ -15,8 +15,6 @@ import java.io.DataOutputStream;
 import java.net.*;
 
 public class LoginScreen extends Activity {
-    private EditText username;
-    private EditText password;
     private static final String TAG = "Rangi_LoginScreen";
 
     URL url;
@@ -35,8 +33,8 @@ public class LoginScreen extends Activity {
     }
 
     public void login(View view) {
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        EditText username = (EditText) findViewById(R.id.username);
+        EditText password = (EditText) findViewById(R.id.password);
 
         try {
             try {
@@ -84,7 +82,7 @@ public class LoginScreen extends Activity {
                     inputJson = new org.json.JSONObject(result);
 
                     /*
-                     * Log in successfull
+                     * Log in successful
                      */
                     if (inputJson.getBoolean("success")) {
 
@@ -101,11 +99,11 @@ public class LoginScreen extends Activity {
                         editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
                         editor.commit();
 
-                        Toast.makeText(LoginScreen.this, "Login successfull", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginScreen.this, "Login successful!", Toast.LENGTH_SHORT).show();
 
                         /*
                          * Add a delay before the user sees the Main Menu
-                         * Is this neccessary?
+                         * Is this necessary?
                          */
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -120,10 +118,10 @@ public class LoginScreen extends Activity {
                         }, 1000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
                     }
                     /*
-                     * Log in unsuccessfull
+                     * Log in unsuccessful
                      */
                     else {
-                        Toast.makeText(LoginScreen.this, "Login not successfull!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginScreen.this, "Login not successful!", Toast.LENGTH_SHORT).show();
 
                         // Let the user view the login screen again instead of jumping back to StartScreen
                         Intent loginScreen = new Intent(LoginScreen.this, LoginScreen.class);

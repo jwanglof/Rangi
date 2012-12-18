@@ -86,7 +86,7 @@ public class RegisterScreen extends Activity {
                         inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
-                            Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterScreen.this, "Registration successful. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
                         /*
                         * User session IN APP

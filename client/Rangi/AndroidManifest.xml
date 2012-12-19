@@ -43,10 +43,5 @@
         <activity android:name="se.tdp025.Rangi.analyze.AnalyzeView"  android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity android:name="se.tdp025.Rangi.settings.Settings" android:theme="@android:style/Theme.Light.NoTitleBar" />
-       <!-- <activity android:name="se.tdp025.Rangi.settings.Settings" android:theme="@android:style/Theme.Light.NoTitleBar" /> -->
-        <activity android:name=".StartScreen">
-
-        </activity>
-
     </application>
 </manifest>

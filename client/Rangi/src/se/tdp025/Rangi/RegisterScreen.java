@@ -54,7 +54,6 @@ public class RegisterScreen extends Activity {
         if (!m.find()) {
             if (checkEmail(email.getText().toString())) {
                 try {
-                    url = new URL(Data.SERVER_ADDRESS + "register");
                     // URL Connection Channel
                     urlConn = url.openConnection();
                     httpConn = (HttpURLConnection) urlConn;
@@ -67,13 +66,14 @@ public class RegisterScreen extends Activity {
                     // Content type
                     urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                     printout = new DataOutputStream(urlConn.getOutputStream());
+
+                    url = new URL(Data.SERVER_ADDRESS + "register");
                     content = "username=" + URLEncoder.encode(username.getText().toString()) +
                             "&password=" + URLEncoder.encode(password.getText().toString()) +
                             "&password_repeat=" + URLEncoder.encode(password_repeat.getText().toString()) +
                             "&email=" + URLEncoder.encode(email.getText().toString());
                     printout.writeBytes(content);
                     printout.flush();
-                    printout.close();
 
                     // Get response data
                     input = new DataInputStream(urlConn.getInputStream());
@@ -88,11 +88,11 @@ public class RegisterScreen extends Activity {
                         if (inputJson.getBoolean("success")) {
                             Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-                        /*
-                        * User session IN APP
-                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
-                        * This will be saved in the app so the user won't have to sign in every time the app is opened
-                        */
+                            /*
+                            * User session IN APP
+                            * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
+                            * This will be saved in the app so the user won't have to sign in every time the app is opened
+                            */
                             SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
                             boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                             SharedPreferences.Editor editor = userSettings.edit();
@@ -100,6 +100,28 @@ public class RegisterScreen extends Activity {
                             editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
                             editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
                             editor.commit();
+
+                            url = new URL(Data.SERVER_ADDRESS + "login");
+                            // URL Connection Channel
+                            /*urlConn = url.openConnection();
+                            httpConn = (HttpURLConnection) urlConn;
+                            // Activate input data
+                            urlConn.setDoInput(true);
+                            // Activate output data
+                            urlConn.setDoOutput(true);
+                            // Turn of caching
+                            urlConn.setUseCaches(false);
+                            // Content type
+                            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            printout = new DataOutputStream(urlConn.getOutputStream());*/
+                            content = "password=" + URLEncoder.encode(password.getText().toString()) +
+                                    "&username=" + URLEncoder.encode(username.getText().toString());
+                            printout.writeBytes(content);
+                            printout.flush();
+                            //printout.close();
+
+                            // Get response data
+                            input = new DataInputStream(urlConn.getInputStream());
 
                             Handler handler = new Handler();
                             // run a thread after 2 seconds to start the Main Menu
@@ -139,6 +161,7 @@ public class RegisterScreen extends Activity {
                         System.out.println(e);
                     }
 
+                    printout.close();
                     input.close();
                 }
                 catch (Exception e) {

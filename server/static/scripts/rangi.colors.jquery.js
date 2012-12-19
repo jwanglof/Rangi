@@ -15,6 +15,9 @@ function create_color_element(color) {
 	if(color["rgb"] != undefined)
 		box.find(".rgb").html(color["rgb"]);
 
+	if(color["ncs"] != undefined)
+		box.find(".ncs").html(color["ncs"]);
+
 	box.find("img.delete").attr("data-color-id", color["_id"]);
 
 	$("#colors").append(box);
@@ -82,7 +85,7 @@ function save_name(text_field) {
 }
 
 function toggle_swatch(swatch) {
-	var new_height = "80px";
+	var new_height = "50px";
 	if(swatch.css("height") == new_height) {
 		new_height = "140px";
 	}

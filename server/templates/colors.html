@@ -26,6 +26,7 @@
 		<div class="hex value"></div>
 		<div class="rgb value"></div>
 		<div class="hsv value"></div>
+		<div class="ncs value"></div>
 	</div>
 </div>
 
@@ -36,10 +37,11 @@
 			<div class="color_container">
 				<div class="color_swatch" style="background-color: {{ color['hex'] }}"></div>
 				<input type="text" class="name" value="{{ color['name'] }}" spellcheck="false"/><br />
+				{% autoescape False %}
 				<div class="hex value">{{ color['hex'] }}</div>
 				<div class="rgb value">{{ color['rgb'] }}</div>
-				{% autoescape False %}
 				<div class="hsv value">{{ color['hsv'] }}</div>
+				<div class="ncs value">{{ color['ncs'] }}</div>
 				{% endautoescape %}
 			</div>
 		</div>

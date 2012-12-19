@@ -46,9 +46,7 @@ public class LoginScreen extends Activity {
                  * Checks CONFIG_USER_LOGIN in SharedPreferences
                  */
                 if (user_login) {
-
                     Intent gotoMainMenu = new Intent(LoginScreen.this, MainMenu.class);
-                    //gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(gotoMainMenu);
                 }
                 else {

@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se.tdp025.Rangi.analyze.ColorAdapter;
 import se.tdp025.Rangi.json.JSON;
-import se.tdp025.Rangi.settings.Settings;
 
 import java.util.ArrayList;
 

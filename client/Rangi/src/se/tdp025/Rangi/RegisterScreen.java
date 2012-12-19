@@ -24,19 +24,8 @@ public class RegisterScreen extends Activity {
     private EditText password;
     private EditText password_repeat;
 
-    URL url;
-    URLConnection urlConn;
-    HttpURLConnection httpConn;
-    DataOutputStream printout;
-    DataInputStream input;
-    String content;
-    String str;
-    org.json.JSONObject inputJson;
-    String result = "";
+    private static final String TAG = "Rangi_RegisterScreen";
 
-    /**
-     * Called when the activity is first created.
-     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registerscreen);
@@ -54,10 +43,10 @@ public class RegisterScreen extends Activity {
         if (!m.find()) {
             if (checkEmail(email.getText().toString())) {
                 try {
-                    url = new URL(Data.SERVER_ADDRESS + "register");
+                    URL url = new URL(Data.SERVER_ADDRESS + "register");
                     // URL Connection Channel
-                    urlConn = url.openConnection();
-                    httpConn = (HttpURLConnection) urlConn;
+                    URLConnection urlConn = url.openConnection();
+                    HttpURLConnection httpConn = (HttpURLConnection) urlConn;
                     // Activate input data
                     urlConn.setDoInput(true);
                     // Activate output data
@@ -66,8 +55,9 @@ public class RegisterScreen extends Activity {
                     urlConn.setUseCaches(false);
                     // Content type
                     urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    printout = new DataOutputStream(urlConn.getOutputStream());
-                    content = "username=" + URLEncoder.encode(username.getText().toString()) +
+                    DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
+
+                    String content = "username=" + URLEncoder.encode(username.getText().toString()) +
                             "&password=" + URLEncoder.encode(password.getText().toString()) +
                             "&password_repeat=" + URLEncoder.encode(password_repeat.getText().toString()) +
                             "&email=" + URLEncoder.encode(email.getText().toString());
@@ -76,29 +66,53 @@ public class RegisterScreen extends Activity {
                     printout.close();
 
                     // Get response data
-                    input = new DataInputStream(urlConn.getInputStream());
+                    DataInputStream input = new DataInputStream(urlConn.getInputStream());
 
+                    String str;
+                    String result = "";
                     while (null != (str = input.readLine())) {
                         result += str;
                     }
 
                     try {
-                        inputJson = new org.json.JSONObject(result);
+                        org.json.JSONObject inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
-                            Toast.makeText(RegisterScreen.this, "Registration successful. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-                        /*
-                        * User session IN APP
-                        * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
-                        * This will be saved in the app so the user won't have to sign in every time the app is opened
-                        */
+                            URL urlLogin = new URL(Data.SERVER_ADDRESS + "login");
+                            // URL Connection Channel
+                            URLConnection urlConnLogin = urlLogin.openConnection();
+                            HttpURLConnection httpConnLogin = (HttpURLConnection) urlConnLogin;
+                            // Activate input data
+                            urlConnLogin.setDoInput(true);
+                            // Activate output data
+                            urlConnLogin.setDoOutput(true);
+                            // Turn of caching
+                            urlConnLogin.setUseCaches(false);
+                            // Content type
+                            urlConnLogin.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            DataOutputStream printoutLogin = new DataOutputStream(urlConnLogin.getOutputStream());
+                            content = "password=" + URLEncoder.encode(password.getText().toString()) +
+                                    "&username=" + URLEncoder.encode(username.getText().toString());
+                            printoutLogin.writeBytes(content);
+                            printoutLogin.flush();
+                            printoutLogin.close();
+
+                            // Get response data
+                            DataInputStream inputLogin = new DataInputStream(urlConnLogin.getInputStream());
+                            inputLogin.close();
+
+                            /*
+                            * User session IN APP
+                            * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
+                            * This will be saved in the app so the user won't have to sign in every time the app is opened
+                            */
                             SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
-                            boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                             SharedPreferences.Editor editor = userSettings.edit();
                             editor.putBoolean("CONFIG_USER_LOGIN", true);
                             editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
-                            editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
+                            editor.putString("CONFIG_USER_COOKIE", httpConnLogin.getHeaderField("Set-Cookie"));
                             editor.commit();
 
                             Handler handler = new Handler();
@@ -114,10 +128,10 @@ public class RegisterScreen extends Activity {
                             }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
                         }
                         else if (inputJson.get("error").toString().equals("Invalid fields.")) {
-                        /*
-                         * If the user doesn't fill all the fields
-                         * The fields will contain the value it previously had
-                         */
+                            /*
+                            * If the user doesn't fill all the fields
+                            * The fields will contain the value it previously had
+                            */
                             Toast.makeText(RegisterScreen.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
 
                             EditText editUsernameField = (EditText) findViewById(R.id.username);

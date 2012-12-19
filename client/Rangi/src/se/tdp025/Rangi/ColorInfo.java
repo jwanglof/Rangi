@@ -1,6 +1,5 @@
 package se.tdp025.Rangi;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
 import se.tdp025.Rangi.json.JSON;
+import se.tdp025.Rangi.ncs_db.MatchColor;
 
 public class ColorInfo extends Activity {
 
@@ -33,6 +33,7 @@ public class ColorInfo extends Activity {
     private Context context;
     private int colorCode;
     private String hex;
+    private String ncs;
     private StringBuilder sbHSV;
     private StringBuilder sbRGB;
 
@@ -61,6 +62,15 @@ public class ColorInfo extends Activity {
         //Color format
         //TextView colorView = (TextView) findViewById(R.id.color_data);
         //colorView.setText(Integer.toString(color));
+
+        ncs = MatchColor.matchColor(this, colorCode);
+        if(ncs.length() != 0) {
+            Log.d(TAG, "Chosen color code:" + colorCode);
+            final TextView ncsView = (TextView) findViewById(R.id.ncs_data);
+            ncsView.setVisibility(View.VISIBLE);
+            findViewById(R.id.ncs_headline).setVisibility(View.VISIBLE);
+            ncsView.setText(ncs);
+        }
 
         //Hex format
         hex = String.format("#%06X", (0xFFFFFF & colorCode));
@@ -262,6 +272,7 @@ public class ColorInfo extends Activity {
             json.put("hex", hex);
             json.put("hsv", "hsv(" + sbHSV.toString().replaceAll("°", "&deg;") + ")");
             json.put("rgb", "rgb(" + sbRGB.toString() + ")");
+            json.put("ncs", ncs);
             URL url = new URL(Data.SERVER_ADDRESS + "save");
             JSON.sendJsonToURL(url, json, context);
         } catch (Exception e) {

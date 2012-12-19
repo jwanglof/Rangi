@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 public class Data {
     public static final String SERVER_ADDRESS = "http://hemma.klumpen.se:5000/";
+    //public static final String SERVER_ADDRESS = "http://192.168.43.169:5000/";
     public static final String SHARED_COLORS = "RANGI_COLORS";
 
     /*
@@ -17,10 +18,9 @@ public class Data {
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            // There are no active networks.
-            return false;
-        } else
+        if (ni == null)
+            return false; // There are no active networks.
+        else
             return true;
     }
 }

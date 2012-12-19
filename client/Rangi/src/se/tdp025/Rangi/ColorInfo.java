@@ -1,6 +1,5 @@
 package se.tdp025.Rangi;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 

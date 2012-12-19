@@ -10,9 +10,7 @@ import se.tdp025.Rangi.Data;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.*;
-import java.util.Date;
 
 public class JSON {
 
@@ -148,7 +146,7 @@ public class JSON {
             printout.close();
 
             DataInputStream input = new DataInputStream(urlConn.getInputStream());
-
+            input.close();
 
             Log.d(TAG, "sendJsonToURL: Cookie: " + cookie);
 

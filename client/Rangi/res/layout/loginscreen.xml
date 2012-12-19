@@ -47,8 +47,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:hint="@string/username"
-                android:inputType="textNoSuggestions"
-                android:text="Can0n">
+                android:inputType="textNoSuggestions">
         </EditText>
 
         <EditText
@@ -58,8 +57,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:hint="@string/password"
-                android:inputType="textPassword"
-                android:text="asd">
+                android:inputType="textPassword">
         </EditText>
 
     </LinearLayout>

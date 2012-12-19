@@ -27,19 +27,6 @@ public class RegisterScreen extends Activity {
 
     private static final String TAG = "Rangi_RegisterScreen";
 
-    /*URL url;
-    URLConnection urlConn;
-    HttpURLConnection httpConn;
-    DataOutputStream printout;
-    DataInputStream input;*/
-    String content;
-    String str;
-    org.json.JSONObject inputJson;
-    String result = "";
-
-    /**
-     * Called when the activity is first created.
-     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registerscreen);
@@ -71,7 +58,7 @@ public class RegisterScreen extends Activity {
                     urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                     DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
 
-                    content = "username=" + URLEncoder.encode(username.getText().toString()) +
+                    String content = "username=" + URLEncoder.encode(username.getText().toString()) +
                             "&password=" + URLEncoder.encode(password.getText().toString()) +
                             "&password_repeat=" + URLEncoder.encode(password_repeat.getText().toString()) +
                             "&email=" + URLEncoder.encode(email.getText().toString());
@@ -82,53 +69,42 @@ public class RegisterScreen extends Activity {
                     // Get response data
                     DataInputStream input = new DataInputStream(urlConn.getInputStream());
 
+                    String str;
+                    String result = "";
                     while (null != (str = input.readLine())) {
                         result += str;
                     }
 
-
-
                     try {
-                        inputJson = new org.json.JSONObject(result);
+                        org.json.JSONObject inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
                             Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-
-
-
-                            URL url2 = new URL(Data.SERVER_ADDRESS + "login");
+                            URL urlLogin = new URL(Data.SERVER_ADDRESS + "login");
                             // URL Connection Channel
-                            URLConnection urlConn2 = url2.openConnection();
-                            HttpURLConnection httpConn2 = (HttpURLConnection) urlConn2;
+                            URLConnection urlConnLogin = urlLogin.openConnection();
+                            HttpURLConnection httpConnLogin = (HttpURLConnection) urlConnLogin;
                             // Activate input data
-                            urlConn2.setDoInput(true);
+                            urlConnLogin.setDoInput(true);
                             // Activate output data
-                            urlConn2.setDoOutput(true);
+                            urlConnLogin.setDoOutput(true);
                             // Turn of caching
-                            urlConn2.setUseCaches(false);
+                            urlConnLogin.setUseCaches(false);
                             // Content type
-                            urlConn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                            DataOutputStream printout2 = new DataOutputStream(urlConn2.getOutputStream());
+                            urlConnLogin.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            DataOutputStream printoutLogin = new DataOutputStream(urlConnLogin.getOutputStream());
                             content = "password=" + URLEncoder.encode(password.getText().toString()) +
                                     "&username=" + URLEncoder.encode(username.getText().toString());
-                            printout2.writeBytes(content);
-                            printout2.flush();
-                            printout2.close();
+                            printoutLogin.writeBytes(content);
+                            printoutLogin.flush();
+                            printoutLogin.close();
 
                             // Get response data
-                            DataInputStream input2 = new DataInputStream(urlConn2.getInputStream());
+                            DataInputStream inputLogin = new DataInputStream(urlConnLogin.getInputStream());
+                            inputLogin.close();
 
-                            String str2 = "";
-                            while (null != (str2 = input2.readLine())) {
-                                Log.d(TAG, str2);
-                            }
-
-
-
-                            input2.close();
-
-                                    /*
+                            /*
                             * User session IN APP
                             * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
                             * This will be saved in the app so the user won't have to sign in every time the app is opened
@@ -137,10 +113,8 @@ public class RegisterScreen extends Activity {
                             SharedPreferences.Editor editor = userSettings.edit();
                             editor.putBoolean("CONFIG_USER_LOGIN", true);
                             editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
-                            editor.putString("CONFIG_USER_COOKIE", httpConn2.getHeaderField("Set-Cookie"));
+                            editor.putString("CONFIG_USER_COOKIE", httpConnLogin.getHeaderField("Set-Cookie"));
                             editor.commit();
-
-                            Log.d(TAG, "Hej" + httpConn2.getHeaderField("Set-Cookie"));
 
                             Handler handler = new Handler();
                             // run a thread after 2 seconds to start the Main Menu
@@ -155,10 +129,10 @@ public class RegisterScreen extends Activity {
                             }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
                         }
                         else if (inputJson.get("error").toString().equals("Invalid fields.")) {
-                        /*
-                         * If the user doesn't fill all the fields
-                         * The fields will contain the value it previously had
-                         */
+                            /*
+                            * If the user doesn't fill all the fields
+                            * The fields will contain the value it previously had
+                            */
                             Toast.makeText(RegisterScreen.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
 
                             EditText editUsernameField = (EditText) findViewById(R.id.username);

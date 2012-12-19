@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -24,11 +25,13 @@ public class RegisterScreen extends Activity {
     private EditText password;
     private EditText password_repeat;
 
-    URL url;
+    private static final String TAG = "Rangi_RegisterScreen";
+
+    /*URL url;
     URLConnection urlConn;
     HttpURLConnection httpConn;
     DataOutputStream printout;
-    DataInputStream input;
+    DataInputStream input;*/
     String content;
     String str;
     org.json.JSONObject inputJson;
@@ -54,9 +57,10 @@ public class RegisterScreen extends Activity {
         if (!m.find()) {
             if (checkEmail(email.getText().toString())) {
                 try {
+                    URL url = new URL(Data.SERVER_ADDRESS + "register");
                     // URL Connection Channel
-                    urlConn = url.openConnection();
-                    httpConn = (HttpURLConnection) urlConn;
+                    URLConnection urlConn = url.openConnection();
+                    HttpURLConnection httpConn = (HttpURLConnection) urlConn;
                     // Activate input data
                     urlConn.setDoInput(true);
                     // Activate output data
@@ -65,63 +69,78 @@ public class RegisterScreen extends Activity {
                     urlConn.setUseCaches(false);
                     // Content type
                     urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    printout = new DataOutputStream(urlConn.getOutputStream());
+                    DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
 
-                    url = new URL(Data.SERVER_ADDRESS + "register");
                     content = "username=" + URLEncoder.encode(username.getText().toString()) +
                             "&password=" + URLEncoder.encode(password.getText().toString()) +
                             "&password_repeat=" + URLEncoder.encode(password_repeat.getText().toString()) +
                             "&email=" + URLEncoder.encode(email.getText().toString());
                     printout.writeBytes(content);
                     printout.flush();
+                    printout.close();
 
                     // Get response data
-                    input = new DataInputStream(urlConn.getInputStream());
+                    DataInputStream input = new DataInputStream(urlConn.getInputStream());
 
                     while (null != (str = input.readLine())) {
                         result += str;
                     }
 
+
+
                     try {
                         inputJson = new org.json.JSONObject(result);
 
                         if (inputJson.getBoolean("success")) {
-                            Toast.makeText(RegisterScreen.this, "Registration successful. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterScreen.this, "Registration successfull. Hang tight and you'll be sent to the Main Menu!", Toast.LENGTH_SHORT).show();
 
-                            /*
+
+
+
+                            URL url2 = new URL(Data.SERVER_ADDRESS + "login");
+                            // URL Connection Channel
+                            URLConnection urlConn2 = url2.openConnection();
+                            HttpURLConnection httpConn2 = (HttpURLConnection) urlConn2;
+                            // Activate input data
+                            urlConn2.setDoInput(true);
+                            // Activate output data
+                            urlConn2.setDoOutput(true);
+                            // Turn of caching
+                            urlConn2.setUseCaches(false);
+                            // Content type
+                            urlConn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            DataOutputStream printout2 = new DataOutputStream(urlConn2.getOutputStream());
+                            content = "password=" + URLEncoder.encode(password.getText().toString()) +
+                                    "&username=" + URLEncoder.encode(username.getText().toString());
+                            printout2.writeBytes(content);
+                            printout2.flush();
+                            printout2.close();
+
+                            // Get response data
+                            DataInputStream input2 = new DataInputStream(urlConn2.getInputStream());
+
+                            String str2 = "";
+                            while (null != (str2 = input2.readLine())) {
+                                Log.d(TAG, str2);
+                            }
+
+
+
+                            input2.close();
+
+                                    /*
                             * User session IN APP
                             * Add TRUE to CONFIG_USER_LOGIN in SharedPreferences
                             * This will be saved in the app so the user won't have to sign in every time the app is opened
                             */
                             SharedPreferences userSettings = getSharedPreferences(Data.PREFS_NAME, 0);
-                            boolean user_login = userSettings.getBoolean("CONFIG_USER_LOGIN", false);
                             SharedPreferences.Editor editor = userSettings.edit();
                             editor.putBoolean("CONFIG_USER_LOGIN", true);
                             editor.putString("CONFIG_USER_USERNAME", username.getText().toString());
-                            editor.putString("CONFIG_USER_COOKIE", httpConn.getHeaderField("Set-Cookie"));
+                            editor.putString("CONFIG_USER_COOKIE", httpConn2.getHeaderField("Set-Cookie"));
                             editor.commit();
 
-                            url = new URL(Data.SERVER_ADDRESS + "login");
-                            // URL Connection Channel
-                            /*urlConn = url.openConnection();
-                            httpConn = (HttpURLConnection) urlConn;
-                            // Activate input data
-                            urlConn.setDoInput(true);
-                            // Activate output data
-                            urlConn.setDoOutput(true);
-                            // Turn of caching
-                            urlConn.setUseCaches(false);
-                            // Content type
-                            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                            printout = new DataOutputStream(urlConn.getOutputStream());*/
-                            content = "password=" + URLEncoder.encode(password.getText().toString()) +
-                                    "&username=" + URLEncoder.encode(username.getText().toString());
-                            printout.writeBytes(content);
-                            printout.flush();
-                            //printout.close();
-
-                            // Get response data
-                            input = new DataInputStream(urlConn.getInputStream());
+                            Log.d(TAG, "Hej" + httpConn2.getHeaderField("Set-Cookie"));
 
                             Handler handler = new Handler();
                             // run a thread after 2 seconds to start the Main Menu
@@ -161,7 +180,6 @@ public class RegisterScreen extends Activity {
                         System.out.println(e);
                     }
 
-                    printout.close();
                     input.close();
                 }
                 catch (Exception e) {

@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, abort, jsonify, session, render_template
+from flask import request, abort, jsonify, session, render_template, redirect, url_for
 import database as db
 import os
 
@@ -93,6 +93,14 @@ def login():
 
 	return jsonify({"success": False})
 
+@app.route("/logout", methods = ["GET"])
+def logout():
+	if not logged_in():
+		return redirect(url_for("index"))
+
+	session.pop('id', None)
+	return redirect(url_for("index"))
+
 @app.route("/save", methods = ["POST"])
 def save_color():
 	if not logged_in():
@@ -128,6 +136,7 @@ def colors():
 	if not logged_in():
 		return failed()
 	
+	user = logged_in_user()
 	return jsonify({"success": True, "colors": user.colors})
 
 @app.route("/color_queue", methods = ["GET"])
@@ -159,7 +168,6 @@ def diff_colors():
 	def has_color(color_list, color_id):
 		filtered_list = filter(lambda c: c.get("_id") == color_id, color_list)
 		return len(filtered_list) > 0
-
 
 	diff = {
 		"added": [c for c in all_colors if c.get("_id") not in fetched_color_ids],

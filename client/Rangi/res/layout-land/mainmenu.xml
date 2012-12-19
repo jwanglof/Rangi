@@ -130,7 +130,24 @@
         android:textColor="#6b7f6a"
         android:textSize="@dimen/button_text_size"
         android:textStyle="bold" />
+
+    <Button
+            android:id="@+id/logout_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/buttonmatte"
+            android:onClick="logout"
+            android:padding="10dp"
+            android:text="@string/logout_button"
+            android:textColor="#6b7f6a"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold" />
 		</LinearLayout>
+
 
     </ScrollView>
 

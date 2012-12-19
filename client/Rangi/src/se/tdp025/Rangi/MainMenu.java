@@ -46,7 +46,7 @@ public class MainMenu extends Activity {
         startActivity(saved_colors);
     }
     public void in_app(View view) {
-        Toast.makeText(this, "In_App button", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Get Premium button", Toast.LENGTH_LONG).show();
         /*Intent gallery = new Intent(this, C.class);
         startActivity(gallery); */
     }

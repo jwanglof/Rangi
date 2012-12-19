@@ -32,6 +32,8 @@ def add_color(user, color):
 
 	if not color.get("_id"):
 		color["_id"] = str(ObjectId())
+
+	color["_id"] = str(color["_id"])
 	db.users.update({"_id": user["_id"]}, {"$push": {"colors": color}})
 
 	return True
